@@ -12,7 +12,7 @@ class PersonsController extends Controller
      */
     public function index()
     {
-        //
+        $persons = persons::all();
     }
 
     /**

@@ -7,13 +7,17 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * Run the migrations.
+     * LNORIEGA (08/08/2023): Create table 'Logs' to save all changes made in the database.
      */
     public function up(): void
     {
         Schema::create('logs', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+            $table->increments('id');
+            $table->string('details');
+            $table->string('user_id')->references('id')->on('users');;
+            $table->string('table_name');
+            $table->timestamp('modify_time')->nullable();
+            $table->rememberToken();
         });
     }
 

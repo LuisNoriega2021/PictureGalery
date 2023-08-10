@@ -7,14 +7,19 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * Run the migrations.
+     * LNORIEGA (08/08/2023): Create table 'images' to save the info related to the load images.
      */
     public function up(): void
     {
         Schema::create('images', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-        });
+        $table->uuid('id')->default(\Illuminate\Support\Str::uuid());
+        $table->string('title');
+        $table->string('details');
+        $table->string('path');
+        $table->string('disks');
+        $table->string('collection_id')->references('id')->on('collection');
+        $table->timestamp('create_time')->nullable();
+    });
     }
 
     /**

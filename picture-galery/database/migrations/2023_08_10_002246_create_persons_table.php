@@ -6,14 +6,17 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
+   /**
+     * LNORIEGA (08/08/2023): Create table 'persons' to get a people registered just once.
      */
     public function up(): void
     {
         Schema::create('persons', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+            $table->increments('id');
+            $table->string('first_name');
+            $table->string('last_name');
+            $table->string('email')->unique();
+            $table->timestamp('birth_date')->nullable();
         });
     }
 
