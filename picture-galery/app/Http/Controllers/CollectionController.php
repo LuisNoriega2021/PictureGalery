@@ -12,7 +12,8 @@ class CollectionController extends Controller
      */
     public function index()
     {
-        //
+        $collection = collection::all();
+        return response()->json($collection);
     }
 
     /**
@@ -28,15 +29,24 @@ class CollectionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $collection = new collection();
+        $collection->id = $request->input('id');
+        $collection->title = $request->input('title');
+        $collection->details = $request->input('details');
+        $collection->users_id = $request->input('users_id');
+        $collection->state = $request->input('state');
+        $collection->create_time = $request->input('create_time');
+        $collection->save();
+        return response()->json($collection, 201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(collection $collection)
+    public function show($id)
     {
-        //
+        $collection = collection::find($id);
+        return response()->json($collection);
     }
 
     /**
@@ -50,16 +60,25 @@ class CollectionController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, collection $collection)
+    public function update(Request $request, $id)
     {
-        //
+        $collection = collection::find($id);
+        $collection->id = $request->input('id');
+        $collection->title = $request->input('title');
+        $collection->details = $request->input('details');
+        $collection->create_time = $request->input('create_time');
+        $collection->save();
+
+        return response()->json($collection);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(collection $collection)
+    public function destroy( $id)
     {
-        //
+        $collection = collection::find($id);
+        $collection->delete();
+        return response()->json(null, 204);
     }
 }

@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('collection', function (Blueprint $table) {
+        Schema::create('collections', function (Blueprint $table) {
             $table->uuid('id')->default(\Illuminate\Support\Str::uuid());
             $table->string('title');
             $table->string('details');
-            $table->string('users_id')->references('id')->on('users');
+            $table->string('users_id');
             $table->integer('state');
             $table->timestamp('create_time')->nullable();
         });

@@ -17,7 +17,7 @@ return new class extends Migration
         $table->string('details');
         $table->string('path');
         $table->string('disks');
-        $table->string('collection_id')->references('id')->on('collection');
+        $table->string('collection_id');
         $table->timestamp('create_time')->nullable();
     });
     }

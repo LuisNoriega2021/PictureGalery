@@ -10,8 +10,5 @@ class clients extends Model
 {
     use HasFactory;
 
-    public function persons(): HasMany
-    {
-        return $this->hasMany(persons::class);
-    }
+
 }
