@@ -6,12 +6,12 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-      /**
-     * LNORIEGA (08/08/2023): Create table 'collection' admin the groups of images create by users.
+    /**
+     * Run the migrations.
      */
     public function up(): void
     {
-        Schema::create('collection', function (Blueprint $table) {
+        Schema::create('collections', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('title');
             $table->string('details');
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('collection');
+        Schema::dropIfExists('collections');
     }
 };

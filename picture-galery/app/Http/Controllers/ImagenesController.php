@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\imagenes;
-use App\Models\collection;
+use App\Models\collections;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
@@ -80,36 +80,24 @@ class ImagenesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // Validar la solicitud
-        $request->validate([
-            'title' => 'required',
-            'details' => 'required',
-            'path' => 'required',
-            'disks' => 'required',
-            'collection_id' => 'nullable|uuid',
-            'create_time' => 'nullable',
-        ]);
-
-        // Obtener la imagen
-        $image = Imagenes::find($id);
-
-        if (!$image) {
-            return response()->json(['message' => 'Imagen no encontrada'], 404);
-        }
-        // Verificar la propiedad del usuario
-        $collection = Collection::find($image->collection_id);
-        if (!$collection || $collection->user_id != auth()->user()->id) {
-            return response()->json(['message' => 'No tienes permiso para actualizar esta imagen'], 403);
-        }
-        // Realizar la actualización
-        $image->title = $request->input('title');
-        $image->details = $request->input('details');
-        $image->path = $request->input('path');
-        $image->disks = $request->input('disks');
-        $image->collection_id = $request->input('collection_id');
-        $image->create_time = $request->input('create_time');
-        $image->save();
-        return response()->json(['message' => 'Imagen actualizada correctamente'], 200);
+        $data = $request->json()->all();
+        $collection = Collections::where('users_id', $data['user_collection_id'])
+        ->first();
+           if (!$collection) {
+               return response()->json(['error' => 'No tienes permiso para actualizar esta imagen.'], 403);
+           }
+           $image = Imagenes::find($id);
+           if (!$image) {
+               return response()->json(['error' => 'Imagen no encontrada.'], 404);
+           }
+           $image->title = $data['title'];
+           $image->details = $data['details'];
+           $image->path = $data['path'];
+           $image->disks = $data['disks'];
+           $image->collection_id = $data['collection_id'];
+           $image->create_time = $data['create_time'];
+           $image->save();
+           return response()->json(['message' => 'Imagen actualizada exitosamente.']);
     }
 
     /**

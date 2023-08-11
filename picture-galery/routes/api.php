@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\CollectionController;
+use App\Http\Controllers\CollectionsController;
 use App\Http\Controllers\ImagenesController;
 use App\Http\Controllers\ImagesController;
 /*
@@ -23,11 +23,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get('/persons', 'App\Http\Controllers\PersonsController@index');
 
 //collection endpoints
-Route::get('/collection', [CollectionController::class, 'index']);
-Route::get('/collection/{id}', [CollectionController::class, 'show']);
-Route::post('/collection', [CollectionController::class, 'store']);
-Route::put('/collection/{id}', [CollectionController::class, 'update']);
-Route::delete('/collection/{id}', [CollectionController::class, 'destroy']);
+Route::get('/collections', [CollectionsController::class, 'index']);
+Route::get('/collections/{id}', [CollectionsController::class, 'show']);
+Route::post('/collections', [CollectionsController::class, 'store']);
+Route::put('/collections/{id}', [CollectionsController::class, 'update']);
+Route::delete('/collections/{id}', [CollectionsController::class, 'destroy']);
 
 //imagenes endpoints
 Route::get('/imagenes', [ImagenesController::class, 'index']);
