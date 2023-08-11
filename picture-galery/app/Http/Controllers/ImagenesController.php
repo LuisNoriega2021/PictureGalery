@@ -86,10 +86,11 @@ class ImagenesController extends Controller
            if (!$collection) {
                return response()->json(['error' => 'No tienes permiso para actualizar esta imagen.'], 403);
            }
-           $image = Imagenes::find($id);
+
+           $image = Imagenes::where('collection_id',$data['collection_id'])->where('id',$id)->first();
            if (!$image) {
-               return response()->json(['error' => 'Imagen no encontrada.'], 404);
-           }
+            return response()->json(['error' => 'No existe la imagen o no tienes permiso para actualizar las imagenes de la coleccion.'], 403);
+        }
            $image->title = $data['title'];
            $image->details = $data['details'];
            $image->path = $data['path'];
@@ -103,15 +104,20 @@ class ImagenesController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy( $id, $users)
     {
-        // Obtener la imagen
+
     $image = Imagenes::find($id);
 
     if (!$image) {
         return response()->json(['message' => 'Imagen no encontrada'], 404);
     }
-    // Si todo está en orden, eliminar la imagen
+    $collection = Collections::where('users_id', $users)
+    ->first();
+       if (!$collection) {
+           return response()->json(['error' => 'No tienes permiso para actualizar esta imagen.'], 403);
+       }
+
     $image->delete();
 
     return response()->json(['message' => 'Imagen eliminada correctamente'], 200);
