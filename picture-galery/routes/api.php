@@ -32,7 +32,8 @@ Route::delete('/collection/{id}', [CollectionController::class, 'destroy']);
 //imagenes endpoints
 Route::get('/imagenes', [ImagenesController::class, 'index']);
 Route::post('/imagenes', [ImagenesController::class, 'store']);
-// Route::get('/images', [ImagesController::class, 'index']);
-// Route::get('/images/{collection_id}', [ImagesController::class, 'show']);
+Route::get('/imagenes/{collection_id}', [ImagenesController::class, 'show']);
+Route::put('/imagenes/{id}', [ImagenesController::class, 'update']);
+Route::delete('/imagenes/{id}', [ImagenesController::class, 'destroy']);
 // Route::put('/images/{id}', [ImagesController::class, 'update']);
- Route::post('/images', [ImagesController::class, 'store']);
+// Route::post('/images', [ImagesController::class, 'store']);

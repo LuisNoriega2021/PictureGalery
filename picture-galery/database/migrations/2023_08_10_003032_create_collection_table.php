@@ -11,13 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('collections', function (Blueprint $table) {
-            $table->uuid('id')->default(\Illuminate\Support\Str::uuid());
+        Schema::create('collection', function (Blueprint $table) {
+            $table->uuid('id')->primary();
             $table->string('title');
             $table->string('details');
             $table->string('users_id');
             $table->integer('state');
             $table->timestamp('create_time')->nullable();
+            $table->timestamps();
         });
     }
 
