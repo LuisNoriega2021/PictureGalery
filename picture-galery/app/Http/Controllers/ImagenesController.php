@@ -106,20 +106,20 @@ class ImagenesController extends Controller
      */
     public function destroy( $id, $users)
     {
-
-    $image = Imagenes::find($id);
-
+    $collection = Collections::where('users_id', $users)->get();
+    if (!$collection || $collection ->isEmpty()) {
+        return response()->json(['error' => 'No tienes permiso para eliminar esta imagen.'], 403);
+    }
+    $image = Imagenes::where('id',$id)->first();
     if (!$image) {
         return response()->json(['message' => 'Imagen no encontrada'], 404);
     }
-    $collection = Collections::where('users_id', $users)
-    ->first();
-       if (!$collection) {
-           return response()->json(['error' => 'No tienes permiso para actualizar esta imagen.'], 403);
-       }
-
+    $filteredCollection = $collection->where('id', $image['collection_id']);
+    if(!$filteredCollection)
+    {
+        return response()->json(['error' => 'No tienes permiso para eliminar esta imagen.'], 403);
+    }
     $image->delete();
-
     return response()->json(['message' => 'Imagen eliminada correctamente'], 200);
     }
 }

@@ -34,6 +34,6 @@ Route::get('/imagenes', [ImagenesController::class, 'index']);
 Route::post('/imagenes', [ImagenesController::class, 'store']);
 Route::get('/imagenes/{collection_id}', [ImagenesController::class, 'show']);
 Route::put('/imagenes/{id}', [ImagenesController::class, 'update']);
-Route::delete('/imagenes/{id}', [ImagenesController::class, 'destroy']);
+Route::delete('/imagenes/{id}/{users}', [ImagenesController::class, 'destroy']);
 // Route::put('/images/{id}', [ImagesController::class, 'update']);
 // Route::post('/images', [ImagesController::class, 'store']);
