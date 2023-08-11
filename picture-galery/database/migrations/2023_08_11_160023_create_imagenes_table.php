@@ -6,21 +6,21 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-      /**
-     * LNORIEGA (08/08/2023): Create table 'images' to save the info related to the load images.
+    /**
+     * Run the migrations.
      */
     public function up(): void
     {
-        Schema::create('images', function (Blueprint $table) {
-            $table->uuid('id')->default(\Illuminate\Support\Str::uuid());
+        Schema::create('imagenes', function (Blueprint $table) {
+            $table->uuid('id')->primary();
             $table->string('title');
             $table->string('details');
             $table->string('path');
             $table->string('disks');
             $table->uuid('collection_id')->nullable();
             $table->timestamp('create_time')->nullable();
+            $table->timestamps();
         });
-
     }
 
     /**
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('images');
+        Schema::dropIfExists('imagenes');
     }
 };

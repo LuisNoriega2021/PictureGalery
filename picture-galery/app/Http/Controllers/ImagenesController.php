@@ -2,19 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\images;
+use App\Models\imagenes;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
-class ImagesController extends Controller
+class ImagenesController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $images = images::all();
-        return response()->json($images);
+        //
     }
 
     /**
@@ -39,9 +38,8 @@ class ImagesController extends Controller
             'create_time' => 'nullable',
         ]);
 
-        $image = images::create($images);
         $images['id'] = Str::uuid();
-        $image->save();
+        $image = imagenes::create($images);
 
         return response()->json($image, 201);
     }
@@ -49,16 +47,15 @@ class ImagesController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($collection_id)
+    public function show(imagenes $imagenes)
     {
-        $images = images::where('collection_id', $collection_id)->get();
-        return response()->json($images);
+        //
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(images $images)
+    public function edit(imagenes $imagenes)
     {
         //
     }
@@ -66,16 +63,15 @@ class ImagesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, images $images)
+    public function update(Request $request, imagenes $imagenes)
     {
-        $images->update($request->all());
-        return response()->json($images);
+        //
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(images $images)
+    public function destroy(imagenes $imagenes)
     {
         //
     }

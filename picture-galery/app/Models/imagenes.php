@@ -2,10 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class images extends Model
+class imagenes extends Model
 {
     public $incrementing = false;
     protected $keyType = 'string';

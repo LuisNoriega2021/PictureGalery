@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CollectionController;
+use App\Http\Controllers\ImagenesController;
+use App\Http\Controllers\ImagesController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -20,11 +22,17 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::get('/persons', 'App\Http\Controllers\PersonsController@index');
 
-//Route::get('/collection', 'App\Http\Controllers\CollectionController@index');
+//collection endpoints
+Route::get('/collection', [CollectionController::class, 'index']);
+Route::get('/collection/{id}', [CollectionController::class, 'show']);
+Route::post('/collection', [CollectionController::class, 'store']);
+Route::put('/collection/{id}', [CollectionController::class, 'update']);
+Route::delete('/collection/{id}', [CollectionController::class, 'destroy']);
 
-    Route::get('/collection', [CollectionController::class, 'index']);  // Mostrar todos los usuarios
-    Route::get('/collection/{id}', [CollectionController::class, 'show']);  // Mostrar un usuario específico
-    Route::post('/collection', [CollectionController::class, 'store']);  // Crear un nuevo usuario
-    Route::put('/collection/{id}', [CollectionController::class, 'update']);  // Actualizar un usuario existente
-    Route::delete('/collection/{id}', [CollectionController::class, 'destroy']);  // Eliminar un usuario
-
+//imagenes endpoints
+Route::get('/imagenes', [ImagenesController::class, 'index']);
+Route::post('/imagenes', [ImagenesController::class, 'store']);
+// Route::get('/images', [ImagesController::class, 'index']);
+// Route::get('/images/{collection_id}', [ImagesController::class, 'show']);
+// Route::put('/images/{id}', [ImagesController::class, 'update']);
+ Route::post('/images', [ImagesController::class, 'store']);
