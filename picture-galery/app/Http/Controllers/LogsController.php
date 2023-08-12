@@ -20,7 +20,7 @@ class LogsController extends Controller
      */
     public function create()
     {
-        //
+
     }
 
     /**
@@ -28,7 +28,9 @@ class LogsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $logData = $request->all();
+        $log = logs::create($logData);
+        return response()->json($log, 201);
     }
 
     /**

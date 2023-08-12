@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\collections;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use App\Models\imagenes;
+use Illuminate\Support\Facades\Auth;
+use App\Models\logs;
 
 class CollectionsController extends Controller
 {
@@ -13,7 +16,7 @@ class CollectionsController extends Controller
      */
     public function index()
     {
-        $collection = collections::all();
+        $collection = collections::where('state',1)->get();
         return response()->json($collection);
     }
 
@@ -30,16 +33,32 @@ class CollectionsController extends Controller
      */
     public function store(Request $request)
     {
-        $collection = $request->validate([
-            'title' => 'required',
-            'details' => 'required',
+        $rules = [
+            'title' => 'required|string|max:50',
+            'details' => 'required|string',
             'users_id' => 'required',
             'state' => 'required',
-            'create_time' => 'nullable',
-        ]);
+            'create_time' => 'nullable|date',
+        ];
 
-        $images['id'] = Str::uuid();
-        $image = collections::create($collection);
+        $loteMessage = [
+            'required' => 'El campo :attribute es obligatorio.',
+            'max' => 'El campo :attribute no debe exceder :max caracteres.',
+            'string' => 'El campo :attribute debe ser una cadena de texto.',
+            'date' => 'El campo :attribute debe ser una fecha válida.',
+        ];
+
+        $resultValidated = $request->validate($rules, $loteMessage);
+
+        $resultValidated['id'] = Str::uuid();
+        $image = collections::create($resultValidated);
+
+        $log = new logs();
+        $log->details = 'insert ' . $image['id'];
+        //$log->user_id = Auth::id();
+        $log->user_id = $resultValidated['users_id'];
+        $log->table_name = 'collections';
+        $log->save();
 
         return response()->json($image, 201);
     }
@@ -49,8 +68,15 @@ class CollectionsController extends Controller
      */
     public function show($id)
     {
-        $collection = collections::find($id);
-        return response()->json($collection);
+        $collection = collections::where('id',$id)->where('state',1)->first();
+        if (!$collection) {
+            return response()->json(['error' => 'No se encontro la coleccion.'], 403);
+        }
+        $image = Imagenes::where('collection_id',$collection['id'])->get();
+        if (!$image) {
+            return response()->json(['error' => 'No se encontro coincidencias.'], 403);
+        }
+        return response()->json($image);
     }
 
     /**
@@ -66,12 +92,41 @@ class CollectionsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $collection = collections::find($id);
-        $collection->id = $request->input('id');
-        $collection->title = $request->input('title');
-        $collection->details = $request->input('details');
-        $collection->create_time = $request->input('create_time');
+
+        $rules = [
+            'title' => 'required|string|max:255',
+            'details' => 'required|string',
+            'create_time' => 'nullable|date',
+            'users_id' => 'required',
+            'state' => 'required',
+        ];
+
+        $loteMessage = [
+            'required' => 'El campo :attribute es obligatorio.',
+            'string' => 'El campo :attribute debe ser una cadena de texto.',
+            'max' => 'El campo :attribute no debe exceder :max caracteres.',
+            'date' => 'El campo :attribute debe ser una fecha válida.',
+        ];
+        $resultValidated = $request->validate($rules, $loteMessage);
+
+        $data = $request->json()->all();
+        $collection = Collections::where('users_id', $data['users_id'])->where('id', $id)->first();
+        if (!$collection) {
+            return response()->json(['error' => 'No tienes permiso para eliminar esta coleccion.'], 403);
+        }
+        $collection->title = $resultValidated['title'];
+        $collection->details = $resultValidated['details'];
+        $collection->create_time = $resultValidated['create_time'];
+        $collection->users_id = $resultValidated['users_id'];
+        $collection->state = $resultValidated['state'];
         $collection->save();
+
+        $log = new logs();
+        $log->details = 'update ' . $collection['id'];
+        //$log->user_id = Auth::id();
+        $log->user_id = $resultValidated['users_id'];
+        $log->table_name = 'collections';
+        $log->save();
 
         return response()->json($collection);
     }
@@ -79,10 +134,20 @@ class CollectionsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy( $id)
+    public function destroy($id, $users)
     {
-        $collection = collections::find($id);
+        $collection = Collections::where('users_id', $users)->where('id', $id)->first();
+        if (!$collection) {
+            return response()->json(['error' => 'No tienes permiso para eliminar esta coleccion.'], 403);
+        }
         $collection->delete();
-        return response()->json(null, 204);
+        $log = new logs();
+        $log->details = 'delete ' . $id;
+        //$log->user_id = Auth::id();
+        $log->user_id = $users;
+        $log->table_name = 'collections';
+        $log->save();
+
+        return response()->json(['message' => 'Coleccion eliminada correctamente'], 200);
     }
 }

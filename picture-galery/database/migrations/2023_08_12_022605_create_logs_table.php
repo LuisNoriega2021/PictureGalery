@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * LNORIEGA (08/08/2023): Create table 'Logs' to save all changes made in the database.
+     * Run the migrations.
      */
     public function up(): void
     {

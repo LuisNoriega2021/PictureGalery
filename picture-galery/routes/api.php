@@ -4,7 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CollectionsController;
 use App\Http\Controllers\ImagenesController;
-use App\Http\Controllers\ImagesController;
+use App\Http\Controllers\LogsController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -27,7 +27,7 @@ Route::get('/collections', [CollectionsController::class, 'index']);
 Route::get('/collections/{id}', [CollectionsController::class, 'show']);
 Route::post('/collections', [CollectionsController::class, 'store']);
 Route::put('/collections/{id}', [CollectionsController::class, 'update']);
-Route::delete('/collections/{id}', [CollectionsController::class, 'destroy']);
+Route::delete('/collections/{id}/{users}', [CollectionsController::class, 'destroy']);
 
 //imagenes endpoints
 Route::get('/imagenes', [ImagenesController::class, 'index']);
@@ -37,3 +37,4 @@ Route::put('/imagenes/{id}', [ImagenesController::class, 'update']);
 Route::delete('/imagenes/{id}/{users}', [ImagenesController::class, 'destroy']);
 // Route::put('/images/{id}', [ImagesController::class, 'update']);
 // Route::post('/images', [ImagesController::class, 'store']);
+Route::resource('logs', LogsController::class)->only(['index', 'show', 'store']);
