@@ -31,60 +31,15 @@
         </div>
         <div class="row">
             <div class="row">
-                <div class="column">
-                    <div class="img-hover-zoom">
-                        <a href="{{ asset('images/img1.jpg') }}" data-lightbox="models" data-title="Caption1">
-                            <img src="{{ asset('images/img1.jpg') }}" style="width:100%" alt="">
-                        </a>
-                    </div>
-                    <div class="img-hover-zoom">
-                        <a href="{{ asset('images/img2.jpg') }}" data-lightbox="models" data-title="Caption2">
-                            <img src="{{ asset('images/img2.jpg') }}" style="width:100%" alt="">
-                        </a>
-                    </div>
-                    <div class="img-hover-zoom">
-                        <a href="{{ asset('images/img3.jpg') }}" data-lightbox="models" data-title="Caption3">
-                            <img src="{{ asset('images/img3.jpg') }}" style="width:100%" alt="">
-                        </a>
-                    </div>
-                </div>
-                <div class="column">
-                    <div class="img-hover-zoom">
-                        <img src="{{ asset('images/img6.jpg') }}" style="width:100%" alt="">
-                    </div>
-                    <div class="img-hover-zoom">
-                        <img src="{{ asset('images/img5.jpg') }}" style="width:100%" alt="">
-                    </div>
-                    <div class="img-hover-zoom">
-                        <img src="{{ asset('images/img4.jpg') }}" style="width:100%" alt="">
-                    </div>
-                </div>
-                <div class="column">
-                    <div class="img-hover-zoom">
-                        <img src="{{ asset('images/img7.jpg') }}" style="width:100%" alt="">
-                    </div>
-                    <div class="img-hover-zoom">
-                        <img src="{{ asset('images/img8.jpg') }}" style="width:100%" alt="">
-                    </div>
-                    <div class="img-hover-zoom">
-                        <img src="{{ asset('images/img9.jpg') }}" style="width:100%" alt="">
-                    </div>
-                </div>
-                <div class="column">
-                    <div class="img-hover-zoom">
-                        <img src="{{ asset('images/img10.jpg') }}" style="width:100%" alt="">
-                    </div>
-                    <div class="img-hover-zoom">
-                        <img src="{{ asset('images/img11.jpg') }}" style="width:100%" alt="">
-                    </div>
-                    <div class="img-hover-zoom">
-                        <img src="{{ asset('images/img12.jpg') }}" style="width:100%" alt="">
-                    </div>
+                <div class="row" id="image-container">
                 </div>
             </div>
         </div>
         <div>
             <div class="col text-center">
+                <button id="startShakeButton" class="btn button_style_glass">
+                    Iniciar Temblor
+                </button>
                 <button class="btn button_style_glass mt-3" data-bs-toggle="modal" data-bs-target="#myModal">{{ __('Editar galería') }}</button>
                 <p class="custom-font-size mb-0">{{ __('Autor: Luis Noriega') }}</p>
 
@@ -123,7 +78,7 @@
                       <hr>
                       <p class="d-flex justify-content-between align-items-center">
                         <span>Editar o eliminar imágenes de la galería</span>
-                        <button class="btn button_style_glass" id="toggleEffectBtn" data-bs-dismiss="modal">
+                        <button class="btn button_style_glass" id="startShakeButton"  data-bs-dismiss="modal"  >
                             Editar
                         </button>
                        </p>
@@ -169,44 +124,68 @@
     <input type="file" id="fileInput" accept=".jpg, .jpeg, .png, .tif" style="display:none;">
 
     <script>
-        var images = document.querySelectorAll('.img-hover-zoom img');
-        var isShaking = false;
-
-        function startShaking() {
-            if (!isShaking) {
-                images.forEach(function(image) {
-                    image.classList.add('img-shake');
-                });
-                isShaking = true;
-            }
-        }
-
-        function stopShaking() {
-            if (isShaking) {
-                images.forEach(function(image) {
-                    image.classList.remove('img-shake');
-                });
-                isShaking = false;
-            }
-        }
-
         document.addEventListener("DOMContentLoaded", function() {
-            var toggleEffectBtn = document.getElementById("toggleEffectBtn");
-            toggleEffectBtn.addEventListener("click", function() {
-                if (isShaking) {
-                    stopShaking();
-                } else {
-                    startShaking();
-                }
-            });
+            fetch("http://127.0.0.1:8000/api/collections/b20d170d-a70b-4fab-9511-77b7dcf967d4")
+                .then(response => response.json())
+                .then(data => {
+                    const imageContainer = document.getElementById("image-container");
+                    let columnDiv = null;
+                    let columnCount = 0;
 
-            document.addEventListener("click", function(event) {
-                var target = event.target;
-                if (target !== toggleEffectBtn) {
-                    stopShaking();
-                }
-            });
+                    data.forEach((image, index) => {
+                        if (columnCount === 0) {
+                            columnDiv = document.createElement("div");
+                            columnDiv.classList.add("column");
+                            imageContainer.appendChild(columnDiv);
+                        }
+
+                        const imgDiv = document.createElement("div");
+                        imgDiv.classList.add("img-hover-zoom");
+
+                        const imgLink = document.createElement("a");
+                        imgLink.href = image.path;
+                        imgLink.setAttribute("data-lightbox", "models");
+                        imgLink.setAttribute("data-title", image.title);
+
+                        const img = document.createElement("img");
+                        img.src = image.path;
+                        img.alt = image.title;
+                        if(data.length< 4)
+                        {img.style.width = "50%";}
+                        else{img.style.width = "100%";}
+
+
+                        imgLink.appendChild(img);
+                        imgDiv.appendChild(imgLink);
+                        columnDiv.appendChild(imgDiv);
+
+                        columnCount++;
+
+                        if (columnCount === 3 || index === data.length - 1) {
+                            columnCount = 0;
+                        }
+                    });
+                })
+                .catch(error => {
+                    console.error("Error al cargar las imágenes:", error);
+                });
         });
+    </script>
+
+    <script>
+     document.addEventListener("DOMContentLoaded", function() {
+    var startShakeButton = document.getElementById("startShakeButton");
+    var imageDivs = document.querySelectorAll('.img-hover-zoom');
+
+    startShakeButton.addEventListener("click", function() {
+        imageDivs.forEach(function(div) {
+            div.classList.add('shake');
+            setTimeout(function() {
+                div.classList.remove('shake');
+            }, 500); // Detener el temblor después de 500 ms
+        });
+    });
+});
     </script>
     <script>
         var openFileUpload = document.getElementById("openFileUpload");

@@ -89,7 +89,7 @@ footer hr {
     background: rgba(255, 255, 255, .1);
     box-shadow: 0 10px 5px rgba(0, 0, 0, .2);
 }
-
+/*
 .img-shake {
     animation: shake 0.3s infinite;
 }
@@ -104,4 +104,17 @@ footer hr {
 
 .img-overlay {
     position: relative;
+} */
+
+@keyframes shake {
+    0% { transform: translate(0, 0) rotate(0deg); }
+    20% { transform: translate(-2px, -2px) rotate(-2deg); }
+    40% { transform: translate(2px, 2px) rotate(2deg); }
+    60% { transform: translate(-2px, -2px) rotate(-2deg); }
+    80% { transform: translate(2px, 2px) rotate(2deg); }
+    100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+.shake {
+    animation: shake 0.5s linear infinite;
 }
