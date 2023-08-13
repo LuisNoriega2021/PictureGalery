@@ -116,17 +116,17 @@
                       <hr>
                       <p class="d-flex justify-content-between align-items-center">
                         <span>Añadir nueva imagen a la galeria</span>
-                        <button  id="openFileUpload" class="btn button_style_glass" data-bs-toggle="popover" title="Título del Popover" >
+                        <button  id="openFileUpload" class="btn button_style_glass">
                             Añadir
                         </button>
                     </p>
                       <hr>
                       <p class="d-flex justify-content-between align-items-center">
                         <span>Editar o eliminar imágenes de la galería</span>
-                        <button class="btn button_style_glass" data-bs-toggle="popover" title="Título del Popover" >
+                        <button class="btn button_style_glass" id="toggleEffectBtn" data-bs-dismiss="modal">
                             Editar
                         </button>
-                    </p>
+                       </p>
                     <hr>
                     <p class="d-flex justify-content-between align-items-center">
                         <span>Eliminar la galería actual</span>
@@ -136,7 +136,7 @@
                     </p>
                     <hr>
                     <p class="d-flex justify-content-center align-items-center">
-                        <button class="btn button_style_glass" data-bs-toggle="popover" title="Título del Popover">
+                        <button class="btn button_style_glass" data-bs-dismiss="modal" onclick="SaveAndCloseModal()">
                             Guardar cambios
                         </button>
                     </p>
@@ -145,9 +145,9 @@
         </div>
     </div>
 
-    <!-- Modal secundario -->
+    <!-- Modal confrimacion de eliminacion -->
 <div class="modal fade" id="modalSecundario" tabindex="-1" aria-labelledby="modalSecundarioLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered justify-content-center">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="header" id="modalSecundarioLabel">Atención!</h5>
@@ -156,7 +156,7 @@
             <div class="modal-body">
                 <p>Esta seguro que desea eliminar esta colección? al hacer click en el boton "Eliminar" se eliminará la colección permanentemente asi como tambien las fotografias contenidas en dicha colección.</p>
                 <p class="d-flex justify-content-center align-items-center" style="color: brown">
-                <button class="btn button_style_glass"  >
+                <button class="btn button_style_glass"  data-bs-dismiss="modal" onclick="confirmAndCloseModal()">
                     Eliminar
                 </button>
             </p>
@@ -167,31 +167,50 @@
 
 
     <input type="file" id="fileInput" accept=".jpg, .jpeg, .png, .tif" style="display:none;">
-    <script src="script/lightbox-plus-jquery.js">
-     $(document).ready(function () {
-        $('[data-bs-toggle="popover"]').popover();
-        $('[data-bs-toggle="tooltip"]').tooltip();
-    });
-    </script>
-    {{-- <script>
-        document.addEventListener("DOMContentLoaded", function() {
-                var modalButton = document.getElementById("modalButton");
 
-                modalButton.addEventListener("click", function() {
-                    var confirmResult = window.confirm("¿Estás seguro de eliminar la galeria?");
+    <script>
+        var images = document.querySelectorAll('.img-hover-zoom img');
+        var isShaking = false;
 
-                    if (confirmResult) {
-                        alert("Eliminación confirmada");
-                    } else {
-                        alert("Eliminación cancelada");
-                    }
+        function startShaking() {
+            if (!isShaking) {
+                images.forEach(function(image) {
+                    image.classList.add('img-shake');
                 });
+                isShaking = true;
+            }
+        }
+
+        function stopShaking() {
+            if (isShaking) {
+                images.forEach(function(image) {
+                    image.classList.remove('img-shake');
+                });
+                isShaking = false;
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            var toggleEffectBtn = document.getElementById("toggleEffectBtn");
+            toggleEffectBtn.addEventListener("click", function() {
+                if (isShaking) {
+                    stopShaking();
+                } else {
+                    startShaking();
+                }
             });
-    </script> --}}
+
+            document.addEventListener("click", function(event) {
+                var target = event.target;
+                if (target !== toggleEffectBtn) {
+                    stopShaking();
+                }
+            });
+        });
+    </script>
     <script>
         var openFileUpload = document.getElementById("openFileUpload");
         var fileInput = document.getElementById("fileInput");
-
         openFileUpload.addEventListener("click", function() {
             fileInput.click();
         });
@@ -209,6 +228,48 @@
                     fileInput.value = "";
                 }
             }
+        });
+    </script>
+    <script>
+        function confirmAndCloseModal() {
+            //if (confirm("¿Está seguro que desea eliminar esta colección?")) {
+                // Aquí puedes agregar el código para realizar la acción de eliminación
+                // y luego cerrar el modal.
+                // Por ejemplo:
+                // deleteCollection();
+                // closeModal();
+
+                closeModal(); // Cerrar el modal en caso de que no haya una acción de eliminación real.
+            //}
+        }
+
+        function closeModal() {
+            var modal = new bootstrap.Modal(document.getElementById('modalSecundario'));
+            modal.hide();
+        }
+    </script>
+    <script>
+        function SaveAndCloseModal() {
+
+                // y luego cerrar el modal.
+                // Por ejemplo:
+                // deleteCollection();
+                // closeModal();
+
+                closeModal();
+            //}
+        }
+
+        function closeModal() {
+            var modal = new bootstrap.Modal(document.getElementById('modalSecundario'));
+            modal.hide();
+        }
+    </script>
+    <script src="script/lightbox-plus-jquery.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('[data-bs-toggle="popover"]').popover();
+            $('[data-bs-toggle="tooltip"]').tooltip();
         });
     </script>
     <footer>
