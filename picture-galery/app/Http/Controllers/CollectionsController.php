@@ -17,7 +17,14 @@ class CollectionsController extends Controller
     public function index()
     {
         $collection = collections::where('state',1)->get();
-        return response()->json($collection);
+        $response = [];
+            foreach ($collection as $result) {
+        $image = Imagenes::where('collection_id',$result->id)->first();
+        if ($image !== null) {
+            $response[] = $image;
+            }
+        }
+        return response()->json($response);
     }
 
     /**
