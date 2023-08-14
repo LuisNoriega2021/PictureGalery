@@ -100,3 +100,6 @@ footer hr {
 .shake {
     animation: shake 0.5s linear infinite;
 }
+.card-with-link {
+    cursor: pointer; /* Cambia el cursor al pasar sobre la tarjeta */
+}

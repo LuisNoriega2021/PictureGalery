@@ -52,7 +52,7 @@ footer hr {
 
 .card .img-wrapper {
     max-width: 100%;
-    height: 33em;
+    height: 23em;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -89,6 +89,9 @@ footer hr {
     align-items: center;
 }
 
-.activate {
-    display: block; /* o cualquier propiedad necesaria para mostrar la imagen */
+.carousel-control-prev,
+.carousel-control-next {
+    top: auto;
+    bottom: 50%; /* Ajusta la posición vertical de los botones */
+    transform: translateY(50%);
 }

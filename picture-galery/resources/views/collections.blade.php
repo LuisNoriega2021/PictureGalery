@@ -125,7 +125,7 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            fetch("http://127.0.0.1:8000/api/collections/b20d170d-a70b-4fab-9511-77b7dcf967d4")
+            fetch("http://127.0.0.1:8000/api/collections/6fd8f936-b526-4562-a26d-b9b9ab33b900")
                 .then(response => response.json())
                 .then(data => {
                     const imageContainer = document.getElementById("image-container");

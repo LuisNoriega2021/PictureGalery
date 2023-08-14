@@ -32,7 +32,7 @@ Route::get('/test', function () {
 Auth::routes();
 
 
-//Route::get('/home', [HomeController::class, 'index']);
+Route::view('/collections', 'collections');
 Route::get('/home', [ImagenesController::class, 'mostrarVistaConDatos']);
 Route::get('/home', [CollectionsController::class, 'index']) ;
 Route::get('/', 'CollectionsController@index');
