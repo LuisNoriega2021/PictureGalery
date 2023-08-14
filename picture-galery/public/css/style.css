@@ -7,16 +7,29 @@
 
 body{
     margin: 0;
+    font-family: Arial, sans-serif;
+    padding: 0;
+    background-image: url('../images/textura-piedra2.png'); /* Cambia 'ruta-de-tu-imagen.jpg' por la ruta de tu imagen */
+    background-size: cover; /* Ajusta el tamaño de la imagen para cubrir toda la pantalla */
+    background-repeat: no-repeat; /* Evita que la imagen se repita */
+    background-attachment: fixed;
+    color: white;
 }
 .header{
     text-align: center;
     padding: 13px;
+    color: black;
+    background: white;
 }
 .header h1{
     font-family: 'Sacramento';
     font-size: 80px;
 }
-
+.header-sub{
+    text-align: center;
+    padding: 13px;
+    color: black;
+}
 .row{
     display: flex;
     flex-wrap: wrap;
@@ -101,5 +114,5 @@ footer hr {
     animation: shake 0.5s linear infinite;
 }
 .card-with-link {
-    cursor: pointer; /* Cambia el cursor al pasar sobre la tarjeta */
+    cursor: pointer;
 }

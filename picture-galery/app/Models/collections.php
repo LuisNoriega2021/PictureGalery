@@ -5,7 +5,7 @@ namespace App\Models;
 use App\Traits\Uuids;
 use Illuminate\Database\Eloquent\Model;
 
-class collections extends Model
+class Collections extends Model
 {
     use Uuids;
 
@@ -13,4 +13,9 @@ class collections extends Model
     protected $keyType = 'string';
     public $timestamps = false;
     protected $fillable = ['title', 'details', 'users_id', 'state',  'create_time'];
+
+    public function images()
+    {
+        return $this->hasMany(Imagenes::class);
+    }
 }

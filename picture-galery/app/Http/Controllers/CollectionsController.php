@@ -11,12 +11,8 @@ use App\Models\logs;
 
 class CollectionsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
-    {
-
+{
     $collections = collections::where('state', 1)->get();
     $imagesByCollection = [];
 
@@ -26,9 +22,9 @@ class CollectionsController extends Controller
             $imagesByCollection[] = $image;
         }
     }
-    //dd($imagesByCollection);
+
     return view('home', ['imagesByCollection' => $imagesByCollection]);
-    }
+}
 //dd($imagesByCollection);
 //return response()->json(['imagesByCollection' => $imagesByCollection], 200);
     public function create()
