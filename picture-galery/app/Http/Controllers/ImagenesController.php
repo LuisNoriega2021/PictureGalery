@@ -20,6 +20,11 @@ class ImagenesController extends Controller
         return response()->json($images);
     }
 
+    public function mostrarVistaConDatos()
+{
+    $datos = ['nombre' => 'Juan', 'edad' => 30];
+    return view('vista_con_datos', $datos);
+}
     /**
      * Show the form for creating a new resource.
      */

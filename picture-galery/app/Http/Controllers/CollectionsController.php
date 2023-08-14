@@ -17,16 +17,18 @@ class CollectionsController extends Controller
     public function index()
     {
         $collection = collections::where('state',1)->get();
-        $response = [];
+        $images = [];
             foreach ($collection as $result) {
         $image = Imagenes::where('collection_id',$result->id)->first();
         if ($image !== null) {
-            $response[] = $image;
+            $images[] = $image;
             }
         }
-        return response()->json($response);
+        //return view('home', compact('collection'));
+        return view('home', ['image' => $images]);
     }
 
+    //return response()->json(['images' => $images], 200);
     /**
      * Show the form for creating a new resource.
      */
