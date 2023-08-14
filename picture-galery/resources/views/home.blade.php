@@ -10,13 +10,13 @@
 <body>
 
     @extends('layouts.app')
-    <div class="header">
+    <div class="header" >
         <h1>Galeria fotografica</h1>
     </div>
     @section('content')
 
-    <div class="header-sub">
-        <h1>Colecciones</h1>
+    <div class="header">
+        <h2>Colecciones</h2>
     </div>
 
     <div class="container mt-5">
@@ -55,7 +55,7 @@
         </div>
     </div>
     <hr>
-    <div class="header-sub">
+    <div class="header" >
         <h2>Colección personal</h2>
     </div>
     <div class="container mt-5">
@@ -70,7 +70,7 @@
                         @php
                             $end = min($i + 2, $numCards);
                         @endphp
-                        @for ($j = $i; $j < $end; $j++)
+                        {{-- @for ($j = $i; $j < $end; $j++)
                         <div class="card mx-2" style="height: 400px;"> <!-- Ajusta la altura aquí -->
                             <img src="{{$imagesByCollection[$j]->path}}" class="card-img-top img-fluid" alt="{{$imagesByCollection[$j]->title}}" style="max-width: 100%; max-height: 100%;">
                             <div class="card-body">
@@ -78,7 +78,10 @@
                                 <!-- Agrega cualquier otro contenido de la tarjeta aquí -->
                             </div>
                         </div>
-                        @endfor
+                        @endfor --}}
+                        <div >
+                            <img src="{{ asset('../images/new_button.png') }}" style="width:19rem" alt="">
+                        </div>
                     </div>
                 </div>
                 @endfor
