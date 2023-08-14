@@ -4,17 +4,21 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('css/lightbox.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/loading.css') }}">
     <title>Responsive Image Grid</title>
 </head>
 <body>
     @extends('layouts.app')
-
-
     @section('content')
     <div class="header">
-        <h1>Galeria X</h1>
+        <h2>{{ $collection_id[0]->title }}</h2>
+        {{-- <div class="loading-overlay">
+            <div class="loader"></div>
+        </div> --}}
     </div>
     <div class="container">
         <div class="row justify-content-center">
@@ -29,17 +33,25 @@
                 </div>
             </div>
         </div>
+        <div class="col text-center">
+            <a href="{{ route('home') }}" class="btn button_style_glass">
+                Volver a la página principal
+            </a>
+        </div>
         <div class="row">
             <div class="row">
                 <div class="row" id="image-container">
+                    <div class="loading-overlay">
+                        <div class="loader"></div>
+                    </div>
                 </div>
             </div>
         </div>
         <div>
             <div class="col text-center">
-                <button id="startShakeButton" class="btn button_style_glass">
+                {{-- <button id="startShakeButton" class="btn button_style_glass">
                     Iniciar Temblor
-                </button>
+                </button> --}}
                 <button class="btn button_style_glass mt-3" data-bs-toggle="modal" data-bs-target="#myModal">{{ __('Editar galería') }}</button>
                 <p class="custom-font-size mb-0">{{ __('Autor: Luis Noriega') }}</p>
 
@@ -125,50 +137,67 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            fetch("http://127.0.0.1:8000/api/collections/6fd8f936-b526-4562-a26d-b9b9ab33b900")
-                .then(response => response.json())
-                .then(data => {
-                    const imageContainer = document.getElementById("image-container");
-                    let columnDiv = null;
-                    let columnCount = 0;
+            const collectionData = @json($collection_id);
+            const imageContainer = document.getElementById("image-container");
+            const loadingOverlay = document.querySelector(".loading-overlay");
 
-                    data.forEach((image, index) => {
-                        if (columnCount === 0) {
-                            columnDiv = document.createElement("div");
-                            columnDiv.classList.add("column");
-                            imageContainer.appendChild(columnDiv);
-                        }
+            let loadedImages = 0;
+            const totalImages = collectionData.length;
 
-                        const imgDiv = document.createElement("div");
-                        imgDiv.classList.add("img-hover-zoom");
-
-                        const imgLink = document.createElement("a");
-                        imgLink.href = image.path;
-                        imgLink.setAttribute("data-lightbox", "models");
-                        imgLink.setAttribute("data-title", image.title);
-
-                        const img = document.createElement("img");
-                        img.src = image.path;
-                        img.alt = image.title;
-                        if(data.length< 4)
-                        {img.style.width = "50%";}
-                        else{img.style.width = "100%";}
-
-
-                        imgLink.appendChild(img);
-                        imgDiv.appendChild(imgLink);
-                        columnDiv.appendChild(imgDiv);
-
-                        columnCount++;
-
-                        if (columnCount === 3 || index === data.length - 1) {
-                            columnCount = 0;
-                        }
-                    });
-                })
-                .catch(error => {
-                    console.error("Error al cargar las imágenes:", error);
+            collectionData.forEach((image, index) => {
+                const img = new Image();
+                img.src = "../" + image.path;
+                img.alt = image.title;
+                img.addEventListener("load", function() {
+                    loadedImages++;
+                    if (loadedImages === totalImages) {
+                        loadingOverlay.style.display = "none";
+                    }
                 });
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const collectionData = @json($collection_id);
+            const imageContainer = document.getElementById("image-container");
+            let columnDiv = null;
+            let columnCount = 0;
+
+            collectionData.forEach((image, index) => {
+                if (columnCount === 0) {
+                    columnDiv = document.createElement("div");
+                    columnDiv.classList.add("column");
+                    imageContainer.appendChild(columnDiv);
+                }
+
+                const imgDiv = document.createElement("div");
+                imgDiv.classList.add("img-hover-zoom");
+
+                const imgLink = document.createElement("a");
+                imgLink.href = "../"+ image.path;
+                imgLink.setAttribute("data-lightbox", "models");
+                imgLink.setAttribute("data-title", image.title);
+
+                const img = document.createElement("img");
+                img.src =  "../" + image.path;
+                img.alt = image.title;
+                if (collectionData.length < 4) {
+                    img.style.width = "50%";
+                } else {
+                    img.style.width = "100%";
+                }
+
+                imgLink.appendChild(img);
+                imgDiv.appendChild(imgLink);
+                columnDiv.appendChild(imgDiv);
+
+                columnCount++;
+
+                if (columnCount === 3 || index === collectionData.length - 1) {
+                    columnCount = 0;
+                }
+            });
         });
     </script>
 
@@ -209,6 +238,12 @@
             }
         });
     </script>
+<script>
+    window.addEventListener("load", function() {
+        const loadingOverlay = document.querySelector(".loading-overlay");
+        loadingOverlay.style.display = "none"; // Ocultar el efecto de carga
+    });
+</script>
     <script>
         function confirmAndCloseModal() {
             //if (confirm("¿Está seguro que desea eliminar esta colección?")) {
@@ -244,7 +279,13 @@
             modal.hide();
         }
     </script>
-    <script src="script/lightbox-plus-jquery.js"></script>
+    {{-- <script src="script/lightbox-plus-jquery.js"></script> --}}
+    <script src="{{ asset('script/lightbox-plus-jquery.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+
     <script>
         $(document).ready(function () {
             $('[data-bs-toggle="popover"]').popover();

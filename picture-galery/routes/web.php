@@ -21,9 +21,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/collections', function () {
-    return view('collections');
-});
 
 Route::get('/test', function () {
     return view('test');
@@ -31,9 +28,7 @@ Route::get('/test', function () {
 
 Auth::routes();
 
+Route::get('/home', [CollectionsController::class, 'index'])->name('home');
+Route::get('/collections/{collection_id}', 'App\Http\Controllers\CollectionsController@show')->name('collection.show');
 
-Route::view('/collections', 'collections');
-Route::get('/home', [ImagenesController::class, 'mostrarVistaConDatos']);
-Route::get('/home', [CollectionsController::class, 'index']) ;
-Route::get('/', 'CollectionsController@index');
 //

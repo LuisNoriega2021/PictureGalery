@@ -32,7 +32,8 @@
                             $end = min($i + 3, $numCards);
                         @endphp
                         @for ($j = $i; $j < $end; $j++)
-                        <div class="card mx-2" style="height: 400px;"> <!-- Ajusta la altura aquí -->
+                        <div class="card mx-2" style="height: 400px;">
+                            <a href="{{ route('collection.show', ['collection_id' => $imagesByCollection[$j]->collection_id]) }}">
                             <img src="{{$imagesByCollection[$j]->path}}" class="card-img-top img-fluid" alt="{{$imagesByCollection[$j]->title}}" style="max-width: 100%; max-height: 100%;">
                             <div class="card-body">
                                 <h5 class="card-title">{{$imagesByCollection[$j]->title}}</h5>

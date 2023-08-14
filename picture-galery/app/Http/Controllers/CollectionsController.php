@@ -67,22 +67,25 @@ class CollectionsController extends Controller
         return response()->json($image, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
+
     public function show($id)
     {
-        $collection = collections::where('id',$id)->where('state',1)->first();
-        if (!$collection) {
-            return response()->json(['error' => 'No se encontro la coleccion.'], 403);
-        }
-        $image = Imagenes::where('collection_id',$collection['id'])->get();
-        if (!$image) {
-            return response()->json(['error' => 'No se encontro coincidencias.'], 403);
-        }
-        return response()->json($image);
+        $images = Imagenes::where('collection_id', $id)->get();
+        return view('collections', ['collection_id' => $images]);
     }
 
+
+    // $collections = collections::where('state', 1)->get();
+    // $imagesByCollection = [];
+
+    // foreach ($collections as $collection) {
+    //     $image = Imagenes::where('collection_id', $collection->id)->first();
+    //     if ($image !== null) {
+    //         $imagesByCollection[] = $image;
+    //     }
+    // }
+
+    // return view('home', ['imagesByCollection' => $imagesByCollection]);
     /**
      * Show the form for editing the specified resource.
      */
