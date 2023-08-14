@@ -25,10 +25,15 @@ Route::get('/collections', function () {
     return view('collections');
 });
 
+Route::get('/test', function () {
+    return view('test');
+});
+
 Auth::routes();
 
 
 //Route::get('/home', [HomeController::class, 'index']);
 Route::get('/home', [ImagenesController::class, 'mostrarVistaConDatos']);
 Route::get('/home', [CollectionsController::class, 'index']) ;
+Route::get('/', 'CollectionsController@index');
 //

@@ -16,22 +16,21 @@ class CollectionsController extends Controller
      */
     public function index()
     {
-        $collection = collections::where('state',1)->get();
-        $images = [];
-            foreach ($collection as $result) {
-        $image = Imagenes::where('collection_id',$result->id)->first();
-        if ($image !== null) {
-            $images[] = $image;
-            }
-        }
-        //return view('home', compact('collection'));
-        return view('home', ['image' => $images]);
-    }
 
-    //return response()->json(['images' => $images], 200);
-    /**
-     * Show the form for creating a new resource.
-     */
+    $collections = collections::where('state', 1)->get();
+    $imagesByCollection = [];
+
+    foreach ($collections as $collection) {
+        $image = Imagenes::where('collection_id', $collection->id)->first();
+        if ($image !== null) {
+            $imagesByCollection[] = $image;
+        }
+    }
+    //dd($imagesByCollection);
+    return view('home', ['imagesByCollection' => $imagesByCollection]);
+    }
+//dd($imagesByCollection);
+//return response()->json(['imagesByCollection' => $imagesByCollection], 200);
     public function create()
     {
         //
