@@ -15,18 +15,22 @@
     @extends('layouts.app')
     @section('content')
     <div class="header">
-        <h2>{{ $collection_id[0]->title }}</h2>
-        {{-- <div class="loading-overlay">
-            <div class="loader"></div>
-        </div> --}}
+        @php
+        $collectionId = request()->query('collection_id');
+        $collectionTitle = request()->query('collection_title');
+        $collectionDetails = request()->query('collection_details');
+        $users_id = request()->query('users_id');
+        // dd(request()->query('collection_id'));
+    @endphp
+        <h2>{{ request()->query('collection_title') }}</h2>
     </div>
-    <div class="container">
+    <div class="container main-content">
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card-body text-center">
                     <div class="row align-items-center mb-1">
                         <div class="col text-left">
-                            <p class="customDetails-font-size mb-0">{{ __('"Detalle de la galería y características"') }}</p>
+                            <p class="customDetails-font-size mb-0">{{ __(request()->query('collection_details')) }}</p>
                         </div>
 
                     </div>
@@ -38,6 +42,7 @@
                 Volver a la página principal
             </a>
         </div>
+        @yield('content')
         <div class="row">
             <div class="row">
                 <div class="row" id="image-container">
@@ -49,10 +54,11 @@
         </div>
         <div>
             <div class="col text-center">
-                {{-- <button id="startShakeButton" class="btn button_style_glass">
-                    Iniciar Temblor
-                </button> --}}
-                <button class="btn button_style_glass mt-3" data-bs-toggle="modal" data-bs-target="#myModal">{{ __('Editar galería') }}</button>
+                <button class="btn button_style_glass mt-3" data-bs-toggle="modal" data-bs-target="#myModal"
+
+                @if($users_id[0]!== null) disabled @endif>
+                    {{ __('Editar galería') }}
+                </button>
                 <p class="custom-font-size mb-0">{{ __('Autor: Luis Noriega') }}</p>
 
             </div>
@@ -295,7 +301,7 @@
     <footer>
         <div class="container">
             <hr><div class="col text-center">
-            <p class="small mb-0">{{ __('Copyright©2023') }}</p>
+            <p class="small mb-0">{{ __('LNR-Copyright©2023') }}</p>
         </div>
         </div>
     </footer>

@@ -19,14 +19,22 @@ class CollectionsController extends Controller
     foreach ($collections as $collection) {
         $image = Imagenes::where('collection_id', $collection->id)->first();
         if ($image !== null) {
-            $imagesByCollection[] = $image;
+            $imageData = [
+                'title' => $image->title,
+                'details' => $image->details,
+                'path' => $image->path,
+                'disks'=> $image->disks,
+                'collection_id'=> $image->collection_id,
+                'users_id'=> $collection->users_id,
+                'collection_title' => $collection->title,
+                'collection_details' => $collection->details,
+            ];
+            $imagesByCollection[] = $imageData;
         }
     }
-
     return view('home', ['imagesByCollection' => $imagesByCollection]);
 }
-//dd($imagesByCollection);
-//return response()->json(['imagesByCollection' => $imagesByCollection], 200);
+
     public function create()
     {
         //
@@ -59,7 +67,6 @@ class CollectionsController extends Controller
 
         $log = new logs();
         $log->details = 'insert ' . $image['id'];
-        //$log->user_id = Auth::id();
         $log->user_id = $resultValidated['users_id'];
         $log->table_name = 'collections';
         $log->save();

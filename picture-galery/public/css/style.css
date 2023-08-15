@@ -116,8 +116,13 @@ footer hr {
 }
 
 .shake {
-    animation: shake 0.5s linear infinite;
+    animation: shake 0.3s linear infinite;
 }
 .card-with-link {
     cursor: pointer;
+}
+
+.main-content {
+    min-height: calc(100vh - 200px); /* Ajusta este valor según sea necesario */
+    margin-bottom: 30px; /* Ajusta el margen inferior según sea necesario */
 }
