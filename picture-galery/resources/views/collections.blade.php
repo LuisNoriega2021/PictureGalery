@@ -1,3 +1,9 @@
+@php
+$collectionId = request()->query('collection_id');
+$collectionTitle = request()->query('collection_title');
+$collectionDetails = request()->query('collection_details');
+$users_id = request()->query('users_id');
+@endphp
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,17 +17,10 @@
     <link rel="stylesheet" href="{{ asset('css/loading.css') }}">
     <title>Responsive Image Grid</title>
 </head>
-<body>
+<body data-users-id="{{ $users_id }}">
     @extends('layouts.app')
     @section('content')
     <div class="header">
-        @php
-        $collectionId = request()->query('collection_id');
-        $collectionTitle = request()->query('collection_title');
-        $collectionDetails = request()->query('collection_details');
-        $users_id = request()->query('users_id');
-        // dd(request()->query('collection_id'));
-    @endphp
         <h2>{{ request()->query('collection_title') }}</h2>
     </div>
     <div class="container main-content">
@@ -56,7 +55,7 @@
             <div class="col text-center">
                 <button class="btn button_style_glass mt-3" data-bs-toggle="modal" data-bs-target="#myModal"
 
-                @if($users_id[0]!== null) disabled @endif>
+                @if(request()->query('collection_title')!== 'Crea tu nueva Galería!') disabled @endif>
                     {{ __('Editar galería') }}
                 </button>
                 <p class="custom-font-size mb-0">{{ __('Autor: Luis Noriega') }}</p>
@@ -64,7 +63,7 @@
             </div>
         </div>
     </div>
-     <!-- Modal -->
+
      <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -81,8 +80,8 @@
                             <input type="text" class="form-control" id="recipient-name">
                           </div>
                           <div class="mb-3">
-                            <label for="message-text" class="col-form-label">Detalle de galeria:</label>
-                            <textarea class="form-control" id="message-text"></textarea>
+                            <label for="details_text" class="col-form-label">Detalle de galeria:</label>
+                            <textarea class="form-control"  id="details_text"></textarea>
                           </div>
                         </form>
                       </div>
@@ -109,7 +108,7 @@
                     </p>
                     <hr>
                     <p class="d-flex justify-content-center align-items-center">
-                        <button class="btn button_style_glass" data-bs-dismiss="modal" onclick="SaveAndCloseModal()">
+                        <button class="btn button_style_glass" data-bs-dismiss="modal" id="saveChangesButton" onclick="SaveAndCloseModal()">
                             Guardar cambios
                         </button>
                     </p>
@@ -118,7 +117,6 @@
         </div>
     </div>
 
-    <!-- Modal confrimacion de eliminacion -->
 <div class="modal fade" id="modalSecundario" tabindex="-1" aria-labelledby="modalSecundarioLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered justify-content-center">
         <div class="modal-content">
@@ -169,8 +167,9 @@
             const imageContainer = document.getElementById("image-container");
             let columnDiv = null;
             let columnCount = 0;
-
+            if (collectionData && collectionData.length > 0) {
             collectionData.forEach((image, index) => {
+                if(image.$collection_id !== 'f6e5ccbe-3085-463d-af1e-442e0ada244e'){
                 if (columnCount === 0) {
                     columnDiv = document.createElement("div");
                     columnDiv.classList.add("column");
@@ -203,7 +202,9 @@
                 if (columnCount === 3 || index === collectionData.length - 1) {
                     columnCount = 0;
                 }
+            }
             });
+        }
         });
     </script>
 
@@ -211,16 +212,15 @@
      document.addEventListener("DOMContentLoaded", function() {
     var startShakeButton = document.getElementById("startShakeButton");
     var imageDivs = document.querySelectorAll('.img-hover-zoom');
-
-    startShakeButton.addEventListener("click", function() {
-        imageDivs.forEach(function(div) {
-            div.classList.add('shake');
-            setTimeout(function() {
-                div.classList.remove('shake');
-            }, 500);
+        startShakeButton.addEventListener("click", function() {
+            imageDivs.forEach(function(div) {
+                div.classList.add('shake');
+                setTimeout(function() {
+                    div.classList.remove('shake');
+                }, 500);
+            });
         });
     });
-});
     </script>
     <script>
         var openFileUpload = document.getElementById("openFileUpload");
@@ -250,6 +250,43 @@
         loadingOverlay.style.display = "none"; // Ocultar el efecto de carga
     });
 </script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const usersId = document.body.getAttribute("data-users-id");
+        const saveChangesButton = document.getElementById("saveChangesButton");
+        saveChangesButton.addEventListener("click", function() {
+            const recipientName = document.getElementById("recipient-name").value;
+            const messageText = document.getElementById("details_text").value;
+            const data = {
+                title: recipientName,
+                details: messageText,
+                users_id: usersId,
+                state: 1
+                // Puedes agregar más campos aquí si es necesario
+            };
+
+            // Realizar la solicitud AJAX para enviar los datos al controlador
+            fetch("{{ route('collection.store') }}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Manejar la respuesta del controlador si es necesario
+                console.log(data); // Mostrar la respuesta en la consola
+                // Aquí puedes actualizar la página o realizar alguna otra acción
+            })
+            .catch(error => {
+                console.error("Error:", error);
+            });
+        });
+    });
+</script>
+
     <script>
         function confirmAndCloseModal() {
             //if (confirm("¿Está seguro que desea eliminar esta colección?")) {

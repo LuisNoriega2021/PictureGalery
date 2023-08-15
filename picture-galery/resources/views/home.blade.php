@@ -71,6 +71,9 @@
     <div class="container mt-5">
         <div id="carouselExample2" class="carousel slide">
             <div class="carousel-inner">
+                {{-- @php
+                   dd($imagesByCollection[0]['users_id']) ;
+                @endphp --}}
                 @php
                     $numCards = count($imagesByCollection);
                 @endphp
@@ -82,7 +85,7 @@
                         @endphp
                         <div >
                             <a href="{{ route('collection.show', [
-                                'collection_id' => '0',
+                                'collection_id' => 'f6e5ccbe-3085-463d-af1e-442e0ada244e',
                                 'collection_title' => 'Crea tu nueva Galería!',
                                 'users_id' => $imagesByCollection[0]['users_id'],
                                 'collection_details' => 'Presiona el boton \'\'Editar\'\' adicionar imagenes y editar tu nueva galería'
@@ -113,12 +116,12 @@
             //$('#carouselExample2').carousel();
         });
     </script>
-    <script>
+    {{-- <script>
     window.addEventListener("load", function() {
         const loadingOverlay = document.querySelector(".loading-overlay");
         loadingOverlay.style.display = "none"; // Ocultar el efecto de carga
     });
-</script>
+</script> --}}
     <footer>
         <div class="container">
             <hr><div class="col text-center">

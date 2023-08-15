@@ -30,5 +30,8 @@ Auth::routes();
 
 Route::get('/home', [CollectionsController::class, 'index'])->name('home');
 Route::get('/collections/{collection_id}', 'App\Http\Controllers\CollectionsController@show')->name('collection.show');
+Route::post('/collections/store', 'App\Http\Controllers\CollectionsController@store')->name('collection.store');
+Route::get('/collections/edit', 'App\Http\Controllers\CollectionsController@edit')->name('collection.edit');
+
 
 //
