@@ -57,10 +57,18 @@ $users_id = request()->query('users_id');
         <div>
             <div class="col text-center">
                 <button class="btn button_style_glass mt-3" data-bs-toggle="modal" data-bs-target="#myModal"
-
-                @if(request()->query('collection_title')!== 'Crea tu nueva Galería!') disabled @endif>
-                    {{ __('Editar galería') }}
+                    @if( request()->query('users_id') === '5')
+                        @if(request()->query('collection_title') !== 'Crea tu nueva Galería!')
+                        enabled
+                        @else
+                        disabled
+                        @endif
+                    @else
+                    disabled
+                    @endif>
+                {{ __('Editar galería') }}
                 </button>
+
                 <p class="custom-font-size mb-0">{{ __('Autor: Luis Noriega') }}</p>
 
             </div>
@@ -109,15 +117,17 @@ $users_id = request()->query('users_id');
                         <span>Eliminar la galería actual</span>
 
                         <button class="btn button_style_glass" data-bs-toggle="modal" data-bs-target="#deleteModal"
-                                @if(request()->query('collection_title') !== 'Crea tu nueva Galería!') disabled @endif>
-                            {{ __('Eliminar') }}
-                        </button>
-
-
-                        {{-- <button class="btn button_style_glass" data-bs-toggle="modal" data-bs-target="#modalSecundario">
-
-                            {{ __('Eliminar') }}
-                        </button> --}}
+                        @if( request()->query('users_id') === '5')
+                        @if(request()->query('collection_title') !== 'Crea tu nueva Galería!')
+                        enabled
+                        @else
+                        disabled
+                        @endif
+                    @else
+                    disabled
+                    @endif>
+                {{ __('Eliminar') }}
+                    </button>
                     </p>
                     <hr>
                     <p class="d-flex justify-content-center align-items-center">
@@ -130,31 +140,7 @@ $users_id = request()->query('users_id');
         </div>
     </div>
 
-    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="deleteModalLabel">Confirmar Eliminación</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    ¿Estás seguro de que deseas eliminar esta colección?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-danger" onclick="deleteCollection(collectionId, usersId)">
-                        Eliminar
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="button" class="btn btn-danger" onclick="deleteCollection(collectionId, usersId)">
-            Eliminar
-        </button>
-    </div>
+
 <div class="modal fade" id="selectedImageModal" tabindex="-1" aria-labelledby="selectedImageModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -174,13 +160,6 @@ $users_id = request()->query('users_id');
 </div>
 
     <input type="file" id="fileInput" accept=".jpg, .jpeg, .png, .tif" style="display:none;">
-
-
-    <script>
-        document.getElementById("cancelButton").addEventListener("click", function() {
-            location.reload();
-        });
-    </script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const collectionData = @json($collection_id);
@@ -393,15 +372,8 @@ $users_id = request()->query('users_id');
 
     <script>
         function confirmAndCloseModal() {
-            //if (confirm("¿Está seguro que desea eliminar esta colección?")) {
-                // Aquí puedes agregar el código para realizar la acción de eliminación
-                // y luego cerrar el modal.
-                // Por ejemplo:
-                // deleteCollection();
-                // closeModal();
 
-                closeModal(); // Cerrar el modal en caso de que no haya una acción de eliminación real.
-            //}
+                closeModal();
         }
 
         function closeModal() {
@@ -468,7 +440,6 @@ $users_id = request()->query('users_id');
         })
         .then(response => response.json())
         .then(data => {
-            // Aquí puedes manejar la respuesta si es necesario
             setTimeout(function() {
                 window.location.href = "{{ route('home') }}";
             }, 1000);
@@ -478,7 +449,7 @@ $users_id = request()->query('users_id');
         });
     }
 </script>
-    {{-- <script src="script/lightbox-plus-jquery.js"></script> --}}
+
 
 
 

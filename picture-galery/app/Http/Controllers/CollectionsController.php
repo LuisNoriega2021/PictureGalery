@@ -6,8 +6,9 @@ use App\Models\collections;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Models\imagenes;
-
+use Illuminate\Support\Facades\Auth;
 use App\Models\logs;
+use View;
 
 class CollectionsController extends Controller
 {
@@ -82,6 +83,12 @@ class CollectionsController extends Controller
     }
 
 
+    public function getUserId()
+    {
+        $user_id = Auth::id();
+        return view('home', ['user_id' => $user_id]);
+    }
+
     public function edit(collections $collection)
     {
         //
@@ -131,6 +138,9 @@ class CollectionsController extends Controller
         return response()->json($collection);
     }
 
+    /**
+     * Remove the specified resource from storage.
+     */
     public function destroy($id, $users)
     {
         $collection = Collections::where('users_id', $users)->where('id', $id)->first();

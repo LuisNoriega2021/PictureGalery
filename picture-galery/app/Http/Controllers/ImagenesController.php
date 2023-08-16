@@ -133,6 +133,7 @@ class ImagenesController extends Controller
             }
     }
 
+
     public function destroy( $id, $users)
     {
     $collection = Collections::where('users_id', $users)->get();

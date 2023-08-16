@@ -32,6 +32,7 @@ Route::get('/home', [CollectionsController::class, 'index'])->name('home');
 Route::get('/collections/{collection_id}', 'App\Http\Controllers\CollectionsController@show')->name('collection.show');
 Route::post('/collections/store', 'App\Http\Controllers\CollectionsController@store')->name('collection.store');
 Route::post('/imagenes/store', 'App\Http\Controllers\ImagenesController@store')->name('imagenes.store');
+Route::get('/collections/getUserId', [CollectionsController::class, 'getUserId'])->name('collection.getUserId');
 Route::post('/collections', 'App\Http\Controllers\CollectionsController@destroy')->name('collection.destroy');
 
 
