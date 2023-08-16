@@ -61,9 +61,6 @@ $users_id = request()->query('users_id');
                 @if(request()->query('collection_title')!== 'Crea tu nueva Galería!') disabled @endif>
                     {{ __('Editar galería') }}
                 </button>
-
-                    {{ __('Editar galería') }}
-                </button>
                 <p class="custom-font-size mb-0">{{ __('Autor: Luis Noriega') }}</p>
 
             </div>
