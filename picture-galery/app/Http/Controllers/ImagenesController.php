@@ -11,38 +11,17 @@ use Illuminate\Support\Facades\Auth;
 
 class ImagenesController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $images = imagenes::all();
         return response()->json($images);
     }
 
-    public function mostrarVistaConDatos()
-{
-    $datos = ['nombre' => 'Juan', 'edad' => 30];
-    return view('vista_con_datos', $datos);
-}
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $images = $request->validate([
             'title' => 'required|max:50',
             'details' => 'required|string',
-            'path' => 'required',
-            'disks' => 'required',
             'collection_id' => 'nullable|uuid',
             'create_time' => 'nullable|date',
         ]);
@@ -55,8 +34,19 @@ class ImagenesController extends Controller
             'uuid' => 'El campo :attribute debe ser un UUID válido.',
         ];
 
+
+
+        $image = $request->file('image');
+        $imageName = time() . '_' . $image->getClientOriginalName();
+        $path = 'images/' . $imageName;
+
+        $image->storeAs('public', $path);
+
         $resultValidated = array_merge($images, $request->validate([], $loteMessage));
         $resultValidated['id'] = Str::uuid();
+        $resultValidated['path'] = 'storage/public/' . $path;
+        $resultValidated['disks'] = 'local';
+
         $image = imagenes::create($resultValidated);
 
         $log = new logs();
@@ -68,6 +58,7 @@ class ImagenesController extends Controller
 
         return response()->json($image, 201);
     }
+
 
     /**
      * Display the specified resource.
@@ -142,9 +133,6 @@ class ImagenesController extends Controller
             }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy( $id, $users)
     {
     $collection = Collections::where('users_id', $users)->get();

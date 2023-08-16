@@ -6,7 +6,7 @@ use App\Models\collections;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Models\imagenes;
-use Illuminate\Support\Facades\Auth;
+
 use App\Models\logs;
 
 class CollectionsController extends Controller
@@ -152,7 +152,7 @@ class CollectionsController extends Controller
     {
         $collection = Collections::where('users_id', $users)->where('id', $id)->first();
         if (!$collection) {
-            return response()->json(['error' => 'No tienes permiso para eliminar esta coleccion.'], 403);
+            return response()->json(['error' => 'No tienes permiso para eliminar esta coleccion'], 403);
         }
         $collection->delete();
         $log = new logs();

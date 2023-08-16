@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+{{-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -11,7 +11,7 @@
 <body>
     {{-- <div class="background-video">
         <video src="videos/tela.mp4" autoplay loop muted></video>
-    </div> --}}
+    </div>
     @extends('layouts.app')
     @section('content')
     <div class="content">
@@ -36,5 +36,15 @@
         </div>
     </footer>
     @endsection
+</body>
+</html> --}}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mostrar Imagen</title>
+</head>
+<body>
+    <img class="logo" src="{{ asset('storage/images/123.jpg') }}">
+    {{-- <img src="{{ asset('storage/images/' . $imagePath) }}"  -}}
 </body>
 </html>

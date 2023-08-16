@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Responsive Bootstrap Carousel with Cards</title>
+    <title>Galería fotográfica</title>
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('css/loading.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -28,15 +28,15 @@
                 @endphp
                 @for ($i = 0; $i < $numCards; $i += 3)
                 <div class="carousel-item  @if($i === 0)active @endif" data-bs-interval="8000">
-                    {{-- <div class="loading-overlay">
-                        <div class="loader"></div>
-                    </div> --}}
+
                     <div class="d-flex justify-content-center">
                         @php
                             $end = min($i + 3, $numCards);
                         @endphp
                         @for ($j = $i; $j < $end; $j++)
+                        @if($imagesByCollection[$j]['users_id'] !== 5)
                         <div class="card mx-2" style="height: 400px;">
+                            <div class="img-hover-zoom">
                             <a href="{{ route('collection.show', [
                                 'collection_id' => $imagesByCollection[$j]['collection_id'],
                                 'collection_title' => $imagesByCollection[$j]['collection_title'],
@@ -45,10 +45,12 @@
                             ]) }}">
                             <img src="{{ $imagesByCollection[$j]['path'] }}" class="card-img-top img-fluid" alt="{{ $imagesByCollection[$j]['title'] }}" style="max-width: 100%; max-height: 100%;">
                             <div class="card-body">
-                                <h5 class="card-title">{{ $imagesByCollection[$j]['title'] }}</h5>
-                                <!-- Agrega cualquier otro contenido de la tarjeta aquí -->
+                                <h3 class="carousel-title">{{ $imagesByCollection[$j]['collection_title'] }}</h3> {{-- <h5 class="header-linkseg">{{ $imagesByCollection[$j]['title'] }}</h5> --}}
+                            </div>
                             </div>
                         </div>
+                        @else
+                        @endif
                         @endfor
                     </div>
                 </div>
@@ -88,9 +90,9 @@
                                 'collection_id' => 'f6e5ccbe-3085-463d-af1e-442e0ada244e',
                                 'collection_title' => 'Crea tu nueva Galería!',
                                 'users_id' => $imagesByCollection[0]['users_id'],
-                                'collection_details' => 'Presiona el boton \'\'Editar\'\' adicionar imagenes y editar tu nueva galería'
+                                'collection_details' => 'Presiona el boton \'\'Editar\'\' para adicionar imagenes y editar tu nueva galería'
                             ]) }}">
-                            <img src="{{ asset('../images/new_button.png') }}" style="width:19rem" alt="">
+                            <img src="{{ asset('../storage/public/images/new_button.png') }}" style="width:19rem" alt="">
                         </a>
                         </div>
                     </div>
@@ -116,12 +118,7 @@
             //$('#carouselExample2').carousel();
         });
     </script>
-    {{-- <script>
-    window.addEventListener("load", function() {
-        const loadingOverlay = document.querySelector(".loading-overlay");
-        loadingOverlay.style.display = "none"; // Ocultar el efecto de carga
-    });
-</script> --}}
+
     <footer>
         <div class="container">
             <hr><div class="col text-center">

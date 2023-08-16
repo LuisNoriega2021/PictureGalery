@@ -1,3 +1,4 @@
+
 @php
 $collectionId = request()->query('collection_id');
 $collectionTitle = request()->query('collection_title');
@@ -10,14 +11,16 @@ $users_id = request()->query('users_id');
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    <script src="{{ asset('script/lightbox-plus-jquery.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('css/lightbox.css') }}">
     <link rel="stylesheet" href="{{ asset('css/loading.css') }}">
-    <title>Responsive Image Grid</title>
+    <title>Galería fotográfica</title>
 </head>
-<body data-users-id="{{ $users_id }}">
+<body data-users-id="{{ $users_id }}"  data-collection-id="{{ $collectionId }}">
     @extends('layouts.app')
     @section('content')
     <div class="header">
@@ -53,9 +56,12 @@ $users_id = request()->query('users_id');
         </div>
         <div>
             <div class="col text-center">
-                <button class="btn button_style_glass mt-3" data-bs-toggle="modal" data-bs-target="#myModal"
+                <button class="btn button_style_glass mt-3" data-bs-toggle="modal" data-bs-target="#myModal">
 
-                @if(request()->query('collection_title')!== 'Crea tu nueva Galería!') disabled @endif>
+                {{-- @if(request()->query('collection_title')!== 'Crea tu nueva Galería!') disabled @endif>
+                    {{ __('Editar galería') }}
+                </button> --}}
+
                     {{ __('Editar galería') }}
                 </button>
                 <p class="custom-font-size mb-0">{{ __('Autor: Luis Noriega') }}</p>
@@ -95,15 +101,24 @@ $users_id = request()->query('users_id');
                       <hr>
                       <p class="d-flex justify-content-between align-items-center">
                         <span>Editar o eliminar imágenes de la galería</span>
-                        <button class="btn button_style_glass" id="startShakeButton"  data-bs-dismiss="modal"  >
-                            Editar
+
+                        <button id="startShakeButton" class="btn button_style_glass" data-bs-dismiss="modal"
+                                @if(request()->query('collection_title') !== 'Crea tu nueva Galería!') disabled @endif>
+                            {{ __('Editar') }}
                         </button>
                        </p>
                     <hr>
                     <p class="d-flex justify-content-between align-items-center">
                         <span>Eliminar la galería actual</span>
-                        <button class="btn button_style_glass" data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#modalSecundario" >
-                            Eliminar
+
+                        {{-- <button class="btn button_style_glass" data-bs-toggle="modal" data-bs-target="#deleteModal"
+                                @if(request()->query('collection_title') !== 'Crea tu nueva Galería!') disabled @endif>
+                            {{ __('Eliminar') }}
+                        </button> --}}
+
+                        <button class="btn button_style_glass" data-bs-toggle="modal" data-bs-target="#modalSecundario">
+
+                            {{ __('Eliminar') }}
                         </button>
                     </p>
                     <hr>
@@ -117,28 +132,26 @@ $users_id = request()->query('users_id');
         </div>
     </div>
 
-<div class="modal fade" id="modalSecundario" tabindex="-1" aria-labelledby="modalSecundarioLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered justify-content-center">
+
+<div class="modal fade" id="selectedImageModal" tabindex="-1" aria-labelledby="selectedImageModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="header" id="modalSecundarioLabel">Atención!</h5>
+                <h5 class="modal-title" id="selectedImageModalLabel">Fotografia Seleccionada</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p>Esta seguro que desea eliminar esta colección? al hacer click en el boton "Eliminar" se eliminará la colección permanentemente asi como tambien las fotografias contenidas en dicha colección.</p>
-                <p class="d-flex justify-content-center align-items-center" style="color: brown">
-                <button class="btn button_style_glass"  data-bs-dismiss="modal" onclick="confirmAndCloseModal()">
-                    Eliminar
-                </button>
-            </p>
+                <img id="selectedImagePreview" src="#" alt="Fotografia Seleccionada" style="max-width: 100%;">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn button_style_glass" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn button_style_glass" id="acceptImageButton">Aceptar</button>
             </div>
         </div>
     </div>
 </div>
 
-
     <input type="file" id="fileInput" accept=".jpg, .jpeg, .png, .tif" style="display:none;">
-
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const collectionData = @json($collection_id);
@@ -158,9 +171,22 @@ $users_id = request()->query('users_id');
                         loadingOverlay.style.display = "none";
                     }
                 });
+                const icon = document.createElement("i");
+                icon.classList.add("fas", "fa-star", "image-icon", "hidden");
+                img.parentNode.appendChild(icon);
+            });
+
+            const toggleIconsButton = document.getElementById("toggle-icons-button");
+            toggleIconsButton.addEventListener("click", function() {
+                const icons = document.querySelectorAll(".image-icon");
+                icons.forEach(icon => {
+                    icon.classList.toggle("hidden");
+                });
             });
         });
     </script>
+
+
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const collectionData = @json($collection_id);
@@ -223,31 +249,49 @@ $users_id = request()->query('users_id');
     });
     </script>
     <script>
-        var openFileUpload = document.getElementById("openFileUpload");
-        var fileInput = document.getElementById("fileInput");
-        openFileUpload.addEventListener("click", function() {
-            fileInput.click();
-        });
+        document.addEventListener("DOMContentLoaded", function() {
+            var openFileUpload = document.getElementById("openFileUpload");
+            var fileInput = document.getElementById("fileInput");
+            var selectedImageModal = new bootstrap.Modal(document.getElementById('selectedImageModal'));
+            var selectedImagePreview = document.getElementById('selectedImagePreview');
+            var acceptImageButton = document.getElementById('acceptImageButton');
 
-        fileInput.addEventListener("change", function() {
-            var selectedFile = fileInput.files[0];
-            if (selectedFile) {
-                var validFormats = [".jpg", ".jpeg", ".png", ".tif"];
-                var fileExtension = selectedFile.name.substring(selectedFile.name.lastIndexOf(".")).toLowerCase();
+            openFileUpload.addEventListener("click", function(event) {
+                event.preventDefault();
+                fileInput.click();
+            });
 
-                if (validFormats.includes(fileExtension)) {
-                    alert("Imagen válida seleccionada: " + selectedFile.name);
-                } else {
-                    alert("Formato de archivo no válido. Selecciona una imagen en formato jpg, jpeg, png o tif.");
-                    fileInput.value = "";
+            fileInput.addEventListener("change", function() {
+                var selectedFile = fileInput.files[0];
+                if (selectedFile) {
+                    var validFormats = [".jpg", ".jpeg", ".png", ".tif"];
+                    var fileExtension = selectedFile.name.substring(selectedFile.name.lastIndexOf(".")).toLowerCase();
+
+                    if (validFormats.includes(fileExtension)) {
+                        var reader = new FileReader();
+                        reader.onload = function(e) {
+                            selectedImagePreview.src = e.target.result;
+                        };
+                        reader.readAsDataURL(selectedFile);
+                        selectedImageModal.show();
+                    } else {
+                        alert("Formato de archivo no válido. Selecciona una imagen en formato jpg, jpeg, png o tif.");
+                        fileInput.value = "";
+                    }
                 }
-            }
+            });
+
+            acceptImageButton.addEventListener('click', function() {
+
+
+                selectedImageModal.hide();
+            });
         });
     </script>
 <script>
     window.addEventListener("load", function() {
         const loadingOverlay = document.querySelector(".loading-overlay");
-        loadingOverlay.style.display = "none"; // Ocultar el efecto de carga
+        loadingOverlay.style.display = "none";
     });
 </script>
 <script>
@@ -262,10 +306,7 @@ $users_id = request()->query('users_id');
                 details: messageText,
                 users_id: usersId,
                 state: 1
-                // Puedes agregar más campos aquí si es necesario
             };
-
-            // Realizar la solicitud AJAX para enviar los datos al controlador
             fetch("{{ route('collection.store') }}", {
                 method: "POST",
                 headers: {
@@ -276,14 +317,48 @@ $users_id = request()->query('users_id');
             })
             .then(response => response.json())
             .then(data => {
-                // Manejar la respuesta del controlador si es necesario
-                console.log(data); // Mostrar la respuesta en la consola
-                // Aquí puedes actualizar la página o realizar alguna otra acción
+                const collectionId = data.id;
+                saveImageWithCollectionId(collectionId);
             })
             .catch(error => {
                 console.error("Error:", error);
             });
         });
+    });
+
+    function saveImageWithCollectionId(collectionId) {
+        const fileInput = document.getElementById("fileInput");
+        const collectionTitle = document.getElementById("recipient-name").value;
+        const collectionDetails = document.getElementById("details_text").value;
+        const usersId = document.body.getAttribute("data-users-id");
+
+        const formData = new FormData();
+        formData.append("title", collectionTitle);
+        formData.append("details", collectionDetails);
+        formData.append("image", fileInput.files[0]);
+        formData.append("collection_id", collectionId);
+
+        fetch("{{ route('imagenes.store') }}", {
+            method: "POST",
+            headers: {
+                "X-CSRF-TOKEN": "{{ csrf_token() }}"
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+
+        })
+        .catch(error => {
+            console.error("Error:", error);
+        });
+    }
+</script>
+<script>
+    $('#myModal').on('hidden.bs.modal', function () {
+        $('#recipient-name').val('');
+        $('#details_text').val('');
     });
 </script>
 
@@ -307,14 +382,10 @@ $users_id = request()->query('users_id');
     </script>
     <script>
         function SaveAndCloseModal() {
-
-                // y luego cerrar el modal.
-                // Por ejemplo:
-                // deleteCollection();
-                // closeModal();
-
+            setTimeout(function() {
+            window.location.href = "{{ route('home') }}";
+             }, 1000);
                 closeModal();
-            //}
         }
 
         function closeModal() {
@@ -322,10 +393,64 @@ $users_id = request()->query('users_id');
             modal.hide();
         }
     </script>
+    <script>
+        function validateTextFields() {
+            const recipientName = document.getElementById("recipient-name").value;
+            const detailsText = document.getElementById("details_text").value;
+            if (recipientName.length < 3) {
+                alert("El título debe tener al menos 3 caracteres.");
+                return false;
+            }
+
+            if (detailsText.length < 10) {
+                alert("El detalle debe tener al menos 10 caracteres.");
+                return false;
+            }
+
+            const specialCharacters = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
+            if (specialCharacters.test(recipientName) || specialCharacters.test(detailsText)) {
+                alert("Los campos no deben contener caracteres especiales.");
+                return false;
+            }
+            return true;
+        }
+        function SaveAndCloseModal() {
+            if (!validateTextFields()) {
+                document.getElementById("recipient-name").value = "";
+                document.getElementById("details_text").value = "";
+                return;
+            }
+        }
+    </script>
+   <script>
+    function confirmDeleteCollection(collectionId, usersId) {
+        if (confirm("¿Estás seguro que deseas eliminar esta colección?")) {
+            deleteCollection(collectionId, usersId);
+        }
+    }
+
+    function deleteCollection(collectionId, usersId) {
+        fetch(`{{ route('collection.destroy', ['id' => '${collectionId}', 'users' => '${usersId}']) }}`, {
+            method: "DELETE",
+            headers: {
+                "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                "Content-Type": "application/json"
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Aquí puedes manejar la respuesta si es necesario
+            setTimeout(function() {
+                window.location.href = "{{ route('home') }}";
+            }, 1000);
+        })
+        .catch(error => {
+            console.error("Error:", error);
+        });
+    }
+</script>
     {{-- <script src="script/lightbox-plus-jquery.js"></script> --}}
-    <script src="{{ asset('script/lightbox-plus-jquery.js') }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 
 
 
