@@ -113,6 +113,7 @@ $users_id = request()->query('users_id');
                             {{ __('Eliminar') }}
                         </button>
 
+
                         {{-- <button class="btn button_style_glass" data-bs-toggle="modal" data-bs-target="#modalSecundario">
 
                             {{ __('Eliminar') }}
@@ -129,7 +130,31 @@ $users_id = request()->query('users_id');
         </div>
     </div>
 
-
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Confirmar Eliminación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    ¿Estás seguro de que deseas eliminar esta colección?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" onclick="deleteCollection(collectionId, usersId)">
+                        Eliminar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-danger" onclick="deleteCollection(collectionId, usersId)">
+            Eliminar
+        </button>
+    </div>
 <div class="modal fade" id="selectedImageModal" tabindex="-1" aria-labelledby="selectedImageModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -149,6 +174,13 @@ $users_id = request()->query('users_id');
 </div>
 
     <input type="file" id="fileInput" accept=".jpg, .jpeg, .png, .tif" style="display:none;">
+
+
+    <script>
+        document.getElementById("cancelButton").addEventListener("click", function() {
+            location.reload();
+        });
+    </script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const collectionData = @json($collection_id);

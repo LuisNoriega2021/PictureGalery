@@ -27,30 +27,29 @@
                     $numCards = count($imagesByCollection);
                 @endphp
                 @for ($i = 0; $i < $numCards; $i += 3)
-                <div class="carousel-item  @if($i === 0)active @endif" data-bs-interval="8000">
-
+                <div class="carousel-item @if($i === 0)active @endif" data-bs-interval="8000">
                     <div class="d-flex justify-content-center">
                         @php
                             $end = min($i + 3, $numCards);
                         @endphp
                         @for ($j = $i; $j < $end; $j++)
-                        @if($imagesByCollection[$j]['users_id'] !== 5)
-                        <div class="card mx-2" style="height: 400px;">
-                            <div class="img-hover-zoom">
-                            <a href="{{ route('collection.show', [
-                                'collection_id' => $imagesByCollection[$j]['collection_id'],
-                                'collection_title' => $imagesByCollection[$j]['collection_title'],
-                                'users_id' => $imagesByCollection[$j]['users_id'],
-                                'collection_details' => $imagesByCollection[$j]['collection_details']
-                            ]) }}">
-                            <img src="{{ $imagesByCollection[$j]['path'] }}" class="card-img-top img-fluid" alt="{{ $imagesByCollection[$j]['title'] }}" style="max-width: 100%; max-height: 100%;">
-                            <div class="card-body">
-                                <h3 class="carousel-title">{{ $imagesByCollection[$j]['collection_title'] }}</h3> {{-- <h5 class="header-linkseg">{{ $imagesByCollection[$j]['title'] }}</h5> --}}
+                            @if($imagesByCollection[$j]['users_id'] !== '5')
+                            <div class="card mx-2" style="height: 400px;">
+                                <div class="img-hover-zoom">
+                                    <a href="{{ route('collection.show', [
+                                        'collection_id' => $imagesByCollection[$j]['collection_id'],
+                                        'collection_title' => $imagesByCollection[$j]['collection_title'],
+                                        'users_id' => $imagesByCollection[$j]['users_id'],
+                                        'collection_details' => $imagesByCollection[$j]['collection_details']
+                                    ]) }}">
+                                        <img src="{{ $imagesByCollection[$j]['path'] }}" class="card-img-top img-fluid" alt="{{ $imagesByCollection[$j]['title'] }}" style="max-width: 100%; max-height: 100%;">
+                                        <div class="card-body">
+                                            <h3 class="carousel-title">{{ $imagesByCollection[$j]['collection_title'] }}</h3>
+                                        </div>
+                                    </a>
+                                </div>
                             </div>
-                            </div>
-                        </div>
-                        @else
-                        @endif
+                            @endif
                         @endfor
                     </div>
                 </div>
