@@ -6,7 +6,7 @@ use App\Models\collections;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Models\imagenes;
-use Illuminate\Support\Facades\Auth;
+
 use App\Models\logs;
 
 class CollectionsController extends Controller

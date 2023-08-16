@@ -1,3 +1,4 @@
+
 @php
 $collectionId = request()->query('collection_id');
 $collectionTitle = request()->query('collection_title');
@@ -36,6 +37,15 @@ $users_id = request()->query('users_id');
                 </div>
             </div>
         </div>
+        <?php
+
+        $imagePath = 'images/789.jpg';
+        $imageUrl = asset('storage/' . $imagePath);
+    ?>
+    <img src="{{ $imageUrl }}" alt="Imagen">
+        <P>"{{ $imageUrl }}"</P>
+
+
         <div class="col text-center">
             <a href="{{ route('home') }}" class="btn button_style_glass">
                 Volver a la página principal
@@ -95,15 +105,19 @@ $users_id = request()->query('users_id');
                       <hr>
                       <p class="d-flex justify-content-between align-items-center">
                         <span>Editar o eliminar imágenes de la galería</span>
-                        <button class="btn button_style_glass" id="startShakeButton"  data-bs-dismiss="modal"  >
-                            Editar
+
+                        <button class="btn button_style_glass" id="startShakeButton" data-bs-dismiss="modal"
+                        @if(request()->query('collection_title')!== 'Crea tu nueva Galería!') disabled @endif>
+                            {{ __('Editar') }}
                         </button>
                        </p>
                     <hr>
                     <p class="d-flex justify-content-between align-items-center">
                         <span>Eliminar la galería actual</span>
-                        <button class="btn button_style_glass" data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#modalSecundario" >
-                            Eliminar
+
+                        <button class="btn button_style_glass" data-bs-toggle="modal" data-bs-target="modal" data-bs-target="#modalSecundario"
+                        @if(request()->query('collection_title')!== 'Crea tu nueva Galería!') disabled @endif>
+                            {{ __('Eliminar') }}
                         </button>
                     </p>
                     <hr>
@@ -135,6 +149,23 @@ $users_id = request()->query('users_id');
         </div>
     </div>
 </div>
+<div class="modal fade" id="selectedImageModal" tabindex="-1" aria-labelledby="selectedImageModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="selectedImageModalLabel">Fotografia Seleccionada</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <img id="selectedImagePreview" src="#" alt="Fotografia Seleccionada" style="max-width: 100%;">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn button_style_glass" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn button_style_glass" id="acceptImageButton">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
     <input type="file" id="fileInput" accept=".jpg, .jpeg, .png, .tif" style="display:none;">
@@ -158,9 +189,27 @@ $users_id = request()->query('users_id');
                         loadingOverlay.style.display = "none";
                     }
                 });
+
+                // Crear y agregar icono flotante
+                const icon = document.createElement("i");
+                icon.classList.add("fas", "fa-star", "image-icon", "hidden"); // Agregar la clase "hidden" para ocultar el icono inicialmente
+                img.parentNode.appendChild(icon); // Agregar el icono como un hijo del contenedor de la imagen
             });
+
+            // Agregar evento de clic al botón para mostrar/ocultar iconos
+            const toggleIconsButton = document.getElementById("toggle-icons-button");
+            toggleIconsButton.addEventListener("click", function() {
+                const icons = document.querySelectorAll(".image-icon");
+                icons.forEach(icon => {
+                    icon.classList.toggle("hidden"); // Agregar/eliminar la clase para ocultar los iconos
+                });
+            });
+
+            // Agregar otros eventos aquí si es necesario
         });
     </script>
+
+
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const collectionData = @json($collection_id);
@@ -223,31 +272,49 @@ $users_id = request()->query('users_id');
     });
     </script>
     <script>
-        var openFileUpload = document.getElementById("openFileUpload");
-        var fileInput = document.getElementById("fileInput");
-        openFileUpload.addEventListener("click", function() {
-            fileInput.click();
-        });
+        document.addEventListener("DOMContentLoaded", function() {
+            var openFileUpload = document.getElementById("openFileUpload");
+            var fileInput = document.getElementById("fileInput");
+            var selectedImageModal = new bootstrap.Modal(document.getElementById('selectedImageModal'));
+            var selectedImagePreview = document.getElementById('selectedImagePreview');
+            var acceptImageButton = document.getElementById('acceptImageButton');
 
-        fileInput.addEventListener("change", function() {
-            var selectedFile = fileInput.files[0];
-            if (selectedFile) {
-                var validFormats = [".jpg", ".jpeg", ".png", ".tif"];
-                var fileExtension = selectedFile.name.substring(selectedFile.name.lastIndexOf(".")).toLowerCase();
+            openFileUpload.addEventListener("click", function(event) {
+                event.preventDefault();
+                fileInput.click();
+            });
 
-                if (validFormats.includes(fileExtension)) {
-                    alert("Imagen válida seleccionada: " + selectedFile.name);
-                } else {
-                    alert("Formato de archivo no válido. Selecciona una imagen en formato jpg, jpeg, png o tif.");
-                    fileInput.value = "";
+            fileInput.addEventListener("change", function() {
+                var selectedFile = fileInput.files[0];
+                if (selectedFile) {
+                    var validFormats = [".jpg", ".jpeg", ".png", ".tif"];
+                    var fileExtension = selectedFile.name.substring(selectedFile.name.lastIndexOf(".")).toLowerCase();
+
+                    if (validFormats.includes(fileExtension)) {
+                        var reader = new FileReader();
+                        reader.onload = function(e) {
+                            selectedImagePreview.src = e.target.result;
+                        };
+                        reader.readAsDataURL(selectedFile);
+                        selectedImageModal.show();
+                    } else {
+                        alert("Formato de archivo no válido. Selecciona una imagen en formato jpg, jpeg, png o tif.");
+                        fileInput.value = "";
+                    }
                 }
-            }
+            });
+
+            acceptImageButton.addEventListener('click', function() {
+
+
+                selectedImageModal.hide();
+            });
         });
     </script>
 <script>
     window.addEventListener("load", function() {
         const loadingOverlay = document.querySelector(".loading-overlay");
-        loadingOverlay.style.display = "none"; // Ocultar el efecto de carga
+        loadingOverlay.style.display = "none";
     });
 </script>
 <script>
@@ -262,10 +329,7 @@ $users_id = request()->query('users_id');
                 details: messageText,
                 users_id: usersId,
                 state: 1
-                // Puedes agregar más campos aquí si es necesario
             };
-
-            // Realizar la solicitud AJAX para enviar los datos al controlador
             fetch("{{ route('collection.store') }}", {
                 method: "POST",
                 headers: {
@@ -276,16 +340,45 @@ $users_id = request()->query('users_id');
             })
             .then(response => response.json())
             .then(data => {
-                // Manejar la respuesta del controlador si es necesario
-                console.log(data); // Mostrar la respuesta en la consola
-                // Aquí puedes actualizar la página o realizar alguna otra acción
+                const collectionId = data.id;
+                saveImageWithCollectionId(collectionId);
             })
             .catch(error => {
                 console.error("Error:", error);
             });
         });
     });
+
+    function saveImageWithCollectionId(collectionId) {
+        const fileInput = document.getElementById("fileInput");
+        const collectionTitle = document.getElementById("recipient-name").value;
+        const collectionDetails = document.getElementById("details_text").value;
+        const usersId = document.body.getAttribute("data-users-id");
+
+        const formData = new FormData();
+        formData.append("title", collectionTitle);
+        formData.append("details", collectionDetails);
+        formData.append("image", fileInput.files[0]);
+        formData.append("collection_id", collectionId);
+
+        fetch("{{ route('imagenes.store') }}", {
+            method: "POST",
+            headers: {
+                "X-CSRF-TOKEN": "{{ csrf_token() }}"
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+
+        })
+        .catch(error => {
+            console.error("Error:", error);
+        });
+    }
 </script>
+
 
     <script>
         function confirmAndCloseModal() {

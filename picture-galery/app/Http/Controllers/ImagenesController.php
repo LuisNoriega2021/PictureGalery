@@ -36,13 +36,48 @@ class ImagenesController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+    // public function store(Request $request)
+    // {
+    //     $images = $request->validate([
+    //         'title' => 'required|max:50',
+    //         'details' => 'required|string',
+    //         'path' => 'required',
+    //         'disks' => 'required',
+    //         'collection_id' => 'nullable|uuid',
+    //         'create_time' => 'nullable|date',
+    //     ]);
+
+    //     $loteMessage = [
+    //         'required' => 'El campo :attribute es obligatorio.',
+    //         'max' => 'El campo :attribute no debe exceder :max caracteres.',
+    //         'string' => 'El campo :attribute debe ser una cadena de texto.',
+    //         'date' => 'El campo :attribute debe ser una fecha válida.',
+    //         'uuid' => 'El campo :attribute debe ser un UUID válido.',
+    //     ];
+
+    //     $resultValidated = array_merge($images, $request->validate([], $loteMessage));
+    //     $resultValidated['id'] = Str::uuid();
+    //     $image = imagenes::create($resultValidated);
+
+    //     $log = new logs();
+    //     $log->details = 'insert ' . $image['id'];
+    //     //$log->user_id = Auth::id();
+    //     $log->user_id = $resultValidated['collection_id'];
+    //     $log->table_name = 'imagenes';
+    //     $log->save();
+
+    //     return response()->json($image, 201);
+    // }
+    /**
+     * Store a newly created resource in storage.
+     */
     public function store(Request $request)
     {
         $images = $request->validate([
             'title' => 'required|max:50',
             'details' => 'required|string',
-            'path' => 'required',
-            'disks' => 'required',
+            // 'path' => 'required',
+            // 'disks' => 'required',
             'collection_id' => 'nullable|uuid',
             'create_time' => 'nullable|date',
         ]);
@@ -55,8 +90,18 @@ class ImagenesController extends Controller
             'uuid' => 'El campo :attribute debe ser un UUID válido.',
         ];
 
+
+        $image = $request->file('image');
+        $imageName = time() . '_' . $image->getClientOriginalName();
+        $path = $imageName;
+
+        $image->storeAs('public', $path); // Esto almacenará la imagen en la carpeta "storage/app/public"
+
         $resultValidated = array_merge($images, $request->validate([], $loteMessage));
         $resultValidated['id'] = Str::uuid();
+        $resultValidated['path'] = $path; // Utiliza la ruta completa
+        $resultValidated['disks'] = 'local';
+
         $image = imagenes::create($resultValidated);
 
         $log = new logs();
@@ -68,6 +113,7 @@ class ImagenesController extends Controller
 
         return response()->json($image, 201);
     }
+
 
     /**
      * Display the specified resource.

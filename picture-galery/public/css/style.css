@@ -35,6 +35,15 @@ body{
     padding-bottom: 13px;
     color: black;
 }
+
+.header-link{
+    font-family: 'Sacramento';
+    font-size: 30px !important;
+    text-align: center;
+    color: black;
+    padding-top: 10px;
+}
+
 .row{
     display: flex;
     flex-wrap: wrap;
@@ -83,7 +92,20 @@ body{
     font-size: 1.5rem;
 }
 
+.button_style_glass_login{
+    background:linear-gradient(-30deg, #1ec4e9 0%,#673ab7 50%,#262626 50%, #607d8b 100%);
+    text-decoration: none;
+    color: #000000;
+    font-size: 2em;
+    position: relative;
+    letter-spacing: 2px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, .1);
+    box-shadow: 0 5px 5px rgba(0, 0, 0, .4);
+    font-family: sans-serif;
+    margin-bottom: 1rem;
 
+}
 .button_style_glass{
     background:linear-gradient(-30deg, #1ec4e9 0%,#673ab7 50%,#262626 50%, #607d8b 100%);
     text-decoration: none;
@@ -125,4 +147,8 @@ footer hr {
 .main-content {
     min-height: calc(100vh - 200px); /* Ajusta este valor según sea necesario */
     margin-bottom: 30px; /* Ajusta el margen inferior según sea necesario */
+}
+
+.hidden {
+    display: none;
 }
