@@ -14,10 +14,12 @@ $users_id = request()->query('users_id');
     <script src="{{ asset('script/lightbox-plus-jquery.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('css/lightbox.css') }}">
     <link rel="stylesheet" href="{{ asset('css/loading.css') }}">
+
     <title>Galería fotográfica</title>
 </head>
 <body data-users-id="{{ $users_id }}"  data-collection-id="{{ $collectionId }}">
@@ -169,44 +171,73 @@ $users_id = request()->query('users_id');
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-danger" onclick="deleteCollection()">Eliminar</button>
+                {{-- <button type="button" class="btn btn-danger" onclick="deleteCollection()">Eliminar</button> --}}
+                <form id="delete-form" action="{{ route('collection.destroy', ['id' => request('collection_id'), 'users' => '5']) }}" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                </form>
             </div>
         </div>
     </div>
 </div>
 
     <input type="file" id="fileInput" accept=".jpg, .jpeg, .png, .tif" style="display:none;">
-    <script>
+
+{{-- <script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function() {
+        function deleteCollection() {
+            const usersId = document.body.getAttribute("data-users-id");
+            const collectionId = {{ request('collection_id') }};
+            console.log("collectionId:", collectionId);
+            console.log("usersId:", usersId);
+            fetch("{{ route('collection.destroy', ['id' => 'id', 'users' => 'users']) }}"
+            .replace('id', collectionId)
+            .replace('users', usersId),
+            {
+                method: "DELETE",
+                headers: {
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                setTimeout(function() {
+                    window.location.href = "{{ route('home') }}";
+                }, 1000);
+            })
+            .catch(error => {
+                console.error("Error:", error);
+            });
+        }
+    });
+</script> --}}
+     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            const collectionData = @json($collection_id);
-            const imageContainer = document.getElementById("image-container");
-            const loadingOverlay = document.querySelector(".loading-overlay");
-
-            let loadedImages = 0;
-            const totalImages = collectionData.length;
-
-            collectionData.forEach((image, index) => {
-                const img = new Image();
-                img.src = "../" + image.path;
-                img.alt = image.title;
-                img.addEventListener("load", function() {
-                    loadedImages++;
-                    if (loadedImages === totalImages) {
-                        loadingOverlay.style.display = "none";
+            function deleteCollection() {
+                const usersId = document.body.getAttribute("data-users-id");
+                const collectionId = {{ request('collection_id') }};
+                console.log("collectionId:", collectionId);
+                console.log("usersId:", usersId);
+                fetch("{{ route('collection.destroy', ['id' => 'id', 'users' => 'users']) }}"
+                .replace('id', collectionId)
+                .replace('users', usersId),
+                {
+                    method: "DELETE",
+                    headers: {
+                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
                     }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    setTimeout(function() {
+                        window.location.href = "{{ route('home') }}";
+                    }, 1000);
+                })
+                .catch(error => {
+                    console.error("Error:", error);
                 });
-                const icon = document.createElement("i");
-                icon.classList.add("fas", "fa-star", "image-icon", "hidden");
-                img.parentNode.appendChild(icon);
-            });
-
-            const toggleIconsButton = document.getElementById("toggle-icons-button");
-            toggleIconsButton.addEventListener("click", function() {
-                const icons = document.querySelectorAll(".image-icon");
-                icons.forEach(icon => {
-                    icon.classList.toggle("hidden");
-                });
-            });
+            }
         });
     </script>
 
@@ -439,33 +470,7 @@ $users_id = request()->query('users_id');
             }
         }
     </script>
-    <script>
-        function deleteCollection() {
-            const usersId = document.body.getAttribute("data-users-id");
-            const collectionId = {{ request('collection_id') }};
-            console.log("collectionId:", collectionId);
-            console.log("usersId:", usersId);
-            fetch("{{ route('collection.destroy', ['id' => 'id', 'users' => 'users']) }}"
-            .replace('id', collectionId)
-            .replace('users', usersId),
 
-            {
-                method: "DELETE",
-                headers: {
-                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                setTimeout(function() {
-                window.location.href = "{{ route('home') }}";
-            }, 1000);
-            })
-            .catch(error => {
-                console.error("Error:", error);
-            });
-        }
-    </script>
     <script>
         $(document).ready(function () {
             $('[data-bs-toggle="popover"]').popover();
