@@ -51,6 +51,7 @@ body{
     color: black;
 }
 
+
 .row{
     display: flex;
     flex-wrap: wrap;
@@ -173,4 +174,8 @@ footer hr {
     text-align: center;
     border-radius: 5px;
     z-index: 4;
+}
+
+.hidden {
+    display: none;
 }

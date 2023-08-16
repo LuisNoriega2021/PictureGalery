@@ -34,6 +34,3 @@ Route::post('/collections/store', 'App\Http\Controllers\CollectionsController@st
 Route::post('/imagenes/store', 'App\Http\Controllers\ImagenesController@store')->name('imagenes.store');
 Route::post('/collections', 'App\Http\Controllers\CollectionsController@destroy')->name('collection.destroy');
 
-
-
-//

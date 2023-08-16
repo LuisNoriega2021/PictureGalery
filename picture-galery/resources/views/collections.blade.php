@@ -39,6 +39,15 @@ $users_id = request()->query('users_id');
                 </div>
             </div>
         </div>
+        <?php
+
+        $imagePath = 'images/789.jpg';
+        $imageUrl = asset('storage/' . $imagePath);
+    ?>
+    <img src="{{ $imageUrl }}" alt="Imagen">
+        <P>"{{ $imageUrl }}"</P>
+
+
         <div class="col text-center">
             <a href="{{ route('home') }}" class="btn button_style_glass">
                 Volver a la página principal
@@ -104,19 +113,21 @@ $users_id = request()->query('users_id');
 
                         <button id="startShakeButton" class="btn button_style_glass" data-bs-dismiss="modal"
                                 @if(request()->query('collection_title') !== 'Crea tu nueva Galería!') disabled @endif>
+
+
                             {{ __('Editar') }}
                         </button>
                        </p>
                     <hr>
                     <p class="d-flex justify-content-between align-items-center">
                         <span>Eliminar la galería actual</span>
-
                         {{-- <button class="btn button_style_glass" data-bs-toggle="modal" data-bs-target="#deleteModal"
                                 @if(request()->query('collection_title') !== 'Crea tu nueva Galería!') disabled @endif>
                             {{ __('Eliminar') }}
                         </button> --}}
 
                         <button class="btn button_style_glass" data-bs-toggle="modal" data-bs-target="#modalSecundario">
+
 
                             {{ __('Eliminar') }}
                         </button>
@@ -133,6 +144,23 @@ $users_id = request()->query('users_id');
     </div>
 
 
+<div class="modal fade" id="selectedImageModal" tabindex="-1" aria-labelledby="selectedImageModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="selectedImageModalLabel">Fotografia Seleccionada</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <img id="selectedImagePreview" src="#" alt="Fotografia Seleccionada" style="max-width: 100%;">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn button_style_glass" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn button_style_glass" id="acceptImageButton">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="modal fade" id="selectedImageModal" tabindex="-1" aria-labelledby="selectedImageModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -182,7 +210,17 @@ $users_id = request()->query('users_id');
                 icons.forEach(icon => {
                     icon.classList.toggle("hidden");
                 });
+
             });
+
+            const toggleIconsButton = document.getElementById("toggle-icons-button");
+            toggleIconsButton.addEventListener("click", function() {
+                const icons = document.querySelectorAll(".image-icon");
+                icons.forEach(icon => {
+                    icon.classList.toggle("hidden");
+                });
+            });
+
         });
     </script>
 
@@ -360,19 +398,14 @@ $users_id = request()->query('users_id');
         $('#recipient-name').val('');
         $('#details_text').val('');
     });
+
 </script>
+
 
     <script>
         function confirmAndCloseModal() {
-            //if (confirm("¿Está seguro que desea eliminar esta colección?")) {
-                // Aquí puedes agregar el código para realizar la acción de eliminación
-                // y luego cerrar el modal.
-                // Por ejemplo:
-                // deleteCollection();
-                // closeModal();
 
-                closeModal(); // Cerrar el modal en caso de que no haya una acción de eliminación real.
-            //}
+                closeModal();
         }
 
         function closeModal() {
@@ -439,7 +472,6 @@ $users_id = request()->query('users_id');
         })
         .then(response => response.json())
         .then(data => {
-            // Aquí puedes manejar la respuesta si es necesario
             setTimeout(function() {
                 window.location.href = "{{ route('home') }}";
             }, 1000);
