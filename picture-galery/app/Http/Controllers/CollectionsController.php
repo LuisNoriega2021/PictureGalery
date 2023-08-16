@@ -143,6 +143,8 @@ class CollectionsController extends Controller
      */
     public function destroy($id, $users)
     {
+        //dd($id, $users);
+        return response()->json($id);
         $collection = Collections::where('users_id', $users)->where('id', $id)->first();
         if (!$collection) {
             return response()->json(['error' => 'No tienes permiso para eliminar esta coleccion'], 403);

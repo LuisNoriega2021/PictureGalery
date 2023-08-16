@@ -33,7 +33,11 @@ Route::get('/collections/{collection_id}', 'App\Http\Controllers\CollectionsCont
 Route::post('/collections/store', 'App\Http\Controllers\CollectionsController@store')->name('collection.store');
 Route::post('/imagenes/store', 'App\Http\Controllers\ImagenesController@store')->name('imagenes.store');
 Route::get('/collections/getUserId', [CollectionsController::class, 'getUserId'])->name('collection.getUserId');
-Route::post('/collections', 'App\Http\Controllers\CollectionsController@destroy')->name('collection.destroy');
+Route::delete('/collections/{id}/{users}', 'CollectionsController@destroy')->name('collection.destroy');
+
+//Route::post('/collections', 'App\Http\Controllers\CollectionsController@destroy')->name('collection.destroy');
+//Route::delete('/collections/{id}/{users}', 'CollectionsController@destroy')->name('collection.destroy');
+
 
 
 

@@ -115,18 +115,17 @@ $users_id = request()->query('users_id');
                     <hr>
                     <p class="d-flex justify-content-between align-items-center">
                         <span>Eliminar la galería actual</span>
-
                         <button class="btn button_style_glass" data-bs-toggle="modal" data-bs-target="#deleteModal"
-                        @if( request()->query('users_id') === '5')
+                        @if(request()->query('users_id') === '5')
                         @if(request()->query('collection_title') !== 'Crea tu nueva Galería!')
                         enabled
                         @else
                         disabled
                         @endif
-                    @else
-                    disabled
-                    @endif>
-                {{ __('Eliminar') }}
+                        @else
+                        disabled
+                        @endif>
+                        {{ __('Eliminar') }}
                     </button>
                     </p>
                     <hr>
@@ -154,6 +153,23 @@ $users_id = request()->query('users_id');
             <div class="modal-footer">
                 <button type="button" class="btn button_style_glass" data-bs-dismiss="modal">Cancelar</button>
                 <button type="button" class="btn button_style_glass" id="acceptImageButton">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirmar Eliminación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>¿Estás seguro de que deseas eliminar esta colección?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" onclick="deleteCollection()">Eliminar</button>
             </div>
         </div>
     </div>
@@ -423,37 +439,33 @@ $users_id = request()->query('users_id');
             }
         }
     </script>
-   <script>
-    function confirmDeleteCollection(collectionId, usersId) {
-        if (confirm("¿Estás seguro que deseas eliminar esta colección?")) {
-            deleteCollection(collectionId, usersId);
-        }
-    }
+    <script>
+        function deleteCollection() {
+            const usersId = document.body.getAttribute("data-users-id");
+            const collectionId = {{ request('collection_id') }};
+            console.log("collectionId:", collectionId);
+            console.log("usersId:", usersId);
+            fetch("{{ route('collection.destroy', ['id' => 'id', 'users' => 'users']) }}"
+            .replace('id', collectionId)
+            .replace('users', usersId),
 
-    function deleteCollection(collectionId, usersId) {
-        fetch(`{{ route('collection.destroy', ['id' => '${collectionId}', 'users' => '${usersId}']) }}`, {
-            method: "DELETE",
-            headers: {
-                "X-CSRF-TOKEN": "{{ csrf_token() }}",
-                "Content-Type": "application/json"
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            setTimeout(function() {
+            {
+                method: "DELETE",
+                headers: {
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                setTimeout(function() {
                 window.location.href = "{{ route('home') }}";
             }, 1000);
-        })
-        .catch(error => {
-            console.error("Error:", error);
-        });
-    }
-</script>
-
-
-
-
-
+            })
+            .catch(error => {
+                console.error("Error:", error);
+            });
+        }
+    </script>
     <script>
         $(document).ready(function () {
             $('[data-bs-toggle="popover"]').popover();
