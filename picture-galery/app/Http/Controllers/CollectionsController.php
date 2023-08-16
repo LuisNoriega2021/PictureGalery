@@ -82,20 +82,6 @@ class CollectionsController extends Controller
     }
 
 
-    // $collections = collections::where('state', 1)->get();
-    // $imagesByCollection = [];
-
-    // foreach ($collections as $collection) {
-    //     $image = Imagenes::where('collection_id', $collection->id)->first();
-    //     if ($image !== null) {
-    //         $imagesByCollection[] = $image;
-    //     }
-    // }
-
-    // return view('home', ['imagesByCollection' => $imagesByCollection]);
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(collections $collection)
     {
         //
@@ -145,9 +131,6 @@ class CollectionsController extends Controller
         return response()->json($collection);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy($id, $users)
     {
         $collection = Collections::where('users_id', $users)->where('id', $id)->first();

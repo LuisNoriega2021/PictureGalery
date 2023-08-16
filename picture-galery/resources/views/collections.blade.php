@@ -56,11 +56,11 @@ $users_id = request()->query('users_id');
         </div>
         <div>
             <div class="col text-center">
-                <button class="btn button_style_glass mt-3" data-bs-toggle="modal" data-bs-target="#myModal">
+                <button class="btn button_style_glass mt-3" data-bs-toggle="modal" data-bs-target="#myModal"
 
-                {{-- @if(request()->query('collection_title')!== 'Crea tu nueva Galería!') disabled @endif>
+                @if(request()->query('collection_title')!== 'Crea tu nueva Galería!') disabled @endif>
                     {{ __('Editar galería') }}
-                </button> --}}
+                </button>
 
                     {{ __('Editar galería') }}
                 </button>
@@ -111,15 +111,15 @@ $users_id = request()->query('users_id');
                     <p class="d-flex justify-content-between align-items-center">
                         <span>Eliminar la galería actual</span>
 
-                        {{-- <button class="btn button_style_glass" data-bs-toggle="modal" data-bs-target="#deleteModal"
+                        <button class="btn button_style_glass" data-bs-toggle="modal" data-bs-target="#deleteModal"
                                 @if(request()->query('collection_title') !== 'Crea tu nueva Galería!') disabled @endif>
                             {{ __('Eliminar') }}
-                        </button> --}}
+                        </button>
 
-                        <button class="btn button_style_glass" data-bs-toggle="modal" data-bs-target="#modalSecundario">
+                        {{-- <button class="btn button_style_glass" data-bs-toggle="modal" data-bs-target="#modalSecundario">
 
                             {{ __('Eliminar') }}
-                        </button>
+                        </button> --}}
                     </p>
                     <hr>
                     <p class="d-flex justify-content-center align-items-center">

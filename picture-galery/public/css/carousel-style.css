@@ -92,6 +92,6 @@ footer hr {
 .carousel-control-prev,
 .carousel-control-next {
     top: auto;
-    bottom: 50%; /* Ajusta la posición vertical de los botones */
+    bottom: 50%;
     transform: translateY(50%);
 }
