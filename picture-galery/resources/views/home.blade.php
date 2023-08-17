@@ -34,7 +34,7 @@
                             $end = min($i + 3, $numCards);
                         @endphp
                         @for ($j = $i; $j < $end; $j++)
-                            @if($imagesByCollection[$j]['users_id'] !== $user_id)
+                            @if(intval($imagesByCollection[$j]['users_id']) !== intval($user_id))
                             <div class="card mx-2" style="height: 400px;">
                                 <div class="img-hover-zoom">
                                     <a href="{{ route('collection.show', [
@@ -70,72 +70,85 @@
     </div>
     <hr>
     <div class="header" >
-        <h2>Colección personal</h2>
     </div>
     <div class="container mt-5">
-        @if (!empty($imagesByCollection))
-            <div id="carouselExample2" class="carousel slide">
-                <div id="carouselExample2" class="carousel slide" data-interval="false" data-ride="carousel" data-pause="hover">
-                    <div class="carousel-inner">
+        <div id="carouselExample2" class="carousel slide"  data-interval="false" data-ride="carousel" data-pause="hover">
+            <div class="carousel-inner">
+                @if (!is_null($imagesByCollection) && count($imagesByCollection) > 0)
+                @php
+                    $numCards = count($imagesByCollection);
+                @endphp
+                @if($numCards>0)
+                @for ($i = 0; $i < $numCards; $i += 3)
+                <div class="carousel-item @if($i === 0)active @endif" data-bs-interval="8000">
+                    <div class="d-flex justify-content-center">
                         @php
-                            $numCards = count($imagesByCollection);
+                            $end = min($i + 3, $numCards);
                         @endphp
-                        @foreach ($imagesByCollection as $index => $imageData)
-                            @if ($index % 4 === 0)
-                                <div class="carousel-item @if($index === 0)active @endif" data-bs-interval="8000">
-                                    <div class="d-flex justify-content-center">
-                                        @php
-                                            $end = min($index + 4, $numCards);
-                                        @endphp
-                                        @if ($index === 0)
-                                            <div class="card mx-2" style="height: 400px;">
-                                                <a href="{{ route('collection.show', [
-                                                    'collection_id' => 'f6e5ccbe-3085-463d-af1e-442e0ada244e',
-                                                    'collection_title' => 'Crea tu nueva Galería!',
-                                                    'users_id' => $user_id,
-                                                    'user_id'=> $user_id,
-                                                    'collection_details' => 'Presiona el boton \'\'Editar\'\' para adicionar imagenes y editar tu nueva galería'
-                                                ]) }}">
-                                                    <img src="{{ asset('../storage/public/images/new_button.png') }}" style="width:19rem" alt="">
-                                                </a>
-                                            </div>
-                                        @endif
-                                        @foreach ($imagesByCollection as $j => $imageData)
-                                            @if ($j >= $index && $j < $end && $imageData['users_id'] === $user_id)
-                                                <div class="card mx-2" style="height: 400px;">
-                                                    <div class="img-hover-zoom">
-                                                        <a href="{{ route('collection.show', [
-                                                            'collection_id' => $imageData['collection_id'],
-                                                            'collection_title' => $imageData['collection_title'],
-                                                            'users_id' => $imageData['users_id'],
-                                                            'user_id'=> $user_id,
-                                                            'collection_details' => $imageData['collection_details']
-                                                        ]) }}">
-                                                            <img src="{{ $imageData['path'] }}" class="card-img-top img-fluid" alt="{{ $imageData['title'] }}" style="max-width: 100%; max-height: 100%;">
-                                                            <div class="card-body">
-                                                                <h3 class="carousel-title">{{ $imageData['collection_title'] }}</h3>
-                                                            </div>
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            @endif
-                                        @endforeach
-                                    </div>
+                        @for ($j = $i; $j < $end; $j++)
+                            @if(intval($imagesByCollection[$j]['users_id']) === intval($user_id))
+                            <div class="card mx-2" style="height: 400px;">
+                                <div class="img-hover-zoom">
+                                    <a href="{{ route('collection.show', [
+                                        'collection_id' => $imagesByCollection[$j]['collection_id'],
+                                        'collection_title' => $imagesByCollection[$j]['collection_title'],
+                                        'users_id' => $imagesByCollection[$j]['users_id'],
+                                        'collection_details' => $imagesByCollection[$j]['collection_details']
+                                    ]) }}">
+                                        <img src="{{ $imagesByCollection[$j]['path'] }}" class="card-img-top img-fluid" alt="{{ $imagesByCollection[$j]['title'] }}" style="max-width: 100%; max-height: 100%;">
+                                        <div class="card-body">
+                                            <h3 class="carousel-title">{{ $imagesByCollection[$j]['collection_title'] }}</h3>
+                                        </div>
+                                    </a>
                                 </div>
+                            </div>
                             @endif
-                        @endforeach
+                        @endfor
+                        <div class="card mx-2" style="height: 400px;">
+                                <a href="{{ route('collection.show', [
+                                    'collection_id' => 'f6e5ccbe-3085-463d-af1e-442e0ada244e',
+                                    'collection_title' => 'Crea tu nueva Galería!',
+                                    'users_id' => $user_id,
+                                    'user_id'=> $user_id,
+                                    'collection_details' => 'Presiona el boton \'\'Editar\'\' para adicionar imagenes y editar tu nueva galería'
+                                ]) }}">
+                                    <img src="{{ asset('../storage/public/images/new_button.png') }}" style="width:19rem" alt="">
+                                </a>
+                        </div>
                     </div>
-                    <a class="carousel-control-prev" href="#carouselExample2" role="button" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </a>
-                    <a class="carousel-control-next" href="#carouselExample2" role="button" data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Next</span>
-                    </a>
                 </div>
+                @endfor
+                @else
+                <div class="carousel-item @if($i === 0)active @endif" data-bs-interval="8000">
+                    <div class="d-flex justify-content-center">
+                        <div class="card mx-2" style="height: 400px;">
+                            <div class="img-hover-zoom">
+                                <a href="{{ route('collection.show', [
+                                    'collection_id' => 'f6e5ccbe-3085-463d-af1e-442e0ada244e',
+                                    'collection_title' => 'Crea tu nueva Galería!',
+                                    'users_id' => $user_id,
+                                    'user_id'=> $user_id,
+                                    'collection_details' => 'Presiona el boton \'\'Editar\'\' para adicionar imagenes y editar tu nueva galería'
+                                ]) }}">
+                                    <img src="{{ asset('../storage/public/images/new_button.png') }}" style="width:19rem" alt="">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @endif
             </div>
-        @endif
+            @else
+            @endif
+            {{-- <a class="carousel-control-prev" href="#carouselExample2" role="button" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carouselExample2" role="button" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </a> --}}
+        </div>
     </div>
 
 

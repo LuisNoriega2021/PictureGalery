@@ -59,15 +59,11 @@ $users_id = request()->query('users_id');
         <div>
             <div class="col text-center">
                 <button class="btn button_style_glass mt-3" data-bs-toggle="modal" data-bs-target="#myModal"
-                    @if( intval($users_id) === intval($user_id))
-                        @if(request()->query('collection_title') === 'Crea tu nueva Galería!')
+                @if( intval($users_id) === intval($user_id) || request()->query('collection_title') === 'Crea tu nueva Galería!')
                         enabled
                         @else
                         disabled
-                        @endif
-                    @else
-                    disabled
-                    @endif>
+                        @endif>
                 {{ __('Editar galería') }}
                 </button>
 
@@ -118,15 +114,11 @@ $users_id = request()->query('users_id');
                     <p class="d-flex justify-content-between align-items-center">
                         <span>Eliminar la galería actual</span>
                         <button class="btn button_style_glass" data-bs-toggle="modal" data-bs-target="#deleteModal"
-                        @if( intval($users_id) === intval($user_id))
-                        @if(request()->query('collection_title') === 'Crea tu nueva Galería!')
+                        @if( intval($users_id) === intval($user_id) || request()->query('collection_title') === 'Crea tu nueva Galería!')
                         enabled
                         @else
                         disabled
-                        @endif
-                    @else
-                    disabled
-                    @endif>
+                        @endif>
                         {{ __('Eliminar') }}
                     </button>
                     </p>
