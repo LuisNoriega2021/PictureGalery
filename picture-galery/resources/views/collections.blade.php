@@ -22,11 +22,11 @@ $users_id = request()->query('users_id');
 
     <title>Galería fotográfica</title>
 </head>
-<body data-users-id="{{ $users_id }}"  data-collection-id="{{ $collectionId }}">
+<body data-users-id="{{ $uId   }}"  data-collection-id="{{ $collectionId }}">
     @extends('layouts.app')
     @section('content')
     <div class="header">
-        <h2>{{ request()->query('collection_title') }}</h2>
+        <h2>{{ $uId   }}</h2>
     </div>
     <div class="container main-content">
         <div class="row justify-content-center">
@@ -59,7 +59,7 @@ $users_id = request()->query('users_id');
         <div>
             <div class="col text-center">
                 <button class="btn button_style_glass mt-3" data-bs-toggle="modal" data-bs-target="#myModal"
-                    @if( request()->query('users_id') === '5')
+                    @if( $users_id === $uId)
                         @if(request()->query('collection_title') !== 'Crea tu nueva Galería!')
                         enabled
                         @else

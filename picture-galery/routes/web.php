@@ -29,9 +29,11 @@ Route::get('/test', function () {
 Auth::routes();
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
+Route::get('/collections', [CollectionsController::class, 'index'])->name('collection');
+//Route::get('/collections', 'App\Http\Controllers\CollectionsController@index')->name('collection.index');
 Route::get('/collections/{collection_id}', 'App\Http\Controllers\CollectionsController@show')->name('collection.show');
 Route::post('/collections/store', 'App\Http\Controllers\CollectionsController@store')->name('collection.store');
 Route::post('/imagenes/store', 'App\Http\Controllers\ImagenesController@store')->name('imagenes.store');
 Route::delete('/collections/{id}/users/{users}', [CollectionsController::class, 'destroy'])->name('collection.destroy');
-
+//Route::get('/collections', [CollectionsController::class, 'index'])->name('collections');
 //

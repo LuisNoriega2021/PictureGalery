@@ -20,31 +20,31 @@ class HomeController extends Controller
 
     public function index()
     {
-        $user_id = Auth::id();
+          $user_id = Auth::id();
 
-        $collections = collections::where('state', 1)->get();
-        $imagesByCollection = [];
+    $collections = collections::where('state', 1)->get();
+    $imagesByCollection = [];
 
-        foreach ($collections as $collection) {
-            $image = Imagenes::where('collection_id', $collection->id)->first();
-            if ($image !== null) {
-                $imageData = [
-                    'title' => $image->title,
-                    'details' => $image->details,
-                    'path' => $image->path,
-                    'disks' => $image->disks,
-                    'collection_id' => $image->collection_id,
-                    'users_id' => $collection->users_id,
-                    'collection_title' => $collection->title,
-                    'collection_details' => $collection->details,
-                ];
-                $imagesByCollection[] = $imageData;
-            }
+    foreach ($collections as $collection) {
+        $image = Imagenes::where('collection_id', $collection->id)->first();
+        if ($image !== null) {
+            $imageData = [
+                'title' => $image->title,
+                'details' => $image->details,
+                'path' => $image->path,
+                'disks' => $image->disks,
+                'collection_id' => $image->collection_id,
+                'users_id' => $collection->users_id,
+                'collection_title' => $collection->title,
+                'collection_details' => $collection->details,
+            ];
+            $imagesByCollection[] = $imageData;
         }
+    }
 
-        return view('home', [
-            'user_id' => $user_id,
-            'imagesByCollection' => $imagesByCollection
-        ]);
+    return view('home', [
+        'user_id' => $user_id,
+        'imagesByCollection' => $imagesByCollection
+    ]);
     }
 }
