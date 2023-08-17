@@ -28,7 +28,7 @@ Route::get('/collections/{id}', [CollectionsController::class, 'show']);
 Route::post('/collections', [CollectionsController::class, 'store']);
 Route::put('/collections/{id}', [CollectionsController::class, 'update']);
 Route::delete('/collections/{id}/{users}', [CollectionsController::class, 'destroy']);
-
+Route::get('/collections', [CollectionsController::class, 'getUserId']);
 //imagenes endpoints
 Route::get('/imagenes', [ImagenesController::class, 'index']);
 Route::post('/imagenes', [ImagenesController::class, 'store']);

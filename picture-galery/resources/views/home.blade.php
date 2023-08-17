@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,12 +18,12 @@
     @section('content')
 
     <div class="header">
-        <h2>Colecciones</h2>
+        <p>User ID: {{ $user_id }}</p>
     </div>
-    {{-- <h1>Welcome, User {{ $user_id }}</h1> --}}
     <div class="container mt-5">
         <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
             <div class="carousel-inner">
+                @if (!is_null($imagesByCollection) && count($imagesByCollection) > 0)
                 @php
                     $numCards = count($imagesByCollection);
                 @endphp
@@ -55,6 +56,8 @@
                 </div>
                 @endfor
             </div>
+            @else
+            @endif
             <a class="carousel-control-prev" href="#carouselExample" role="button" data-bs-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Previous</span>
@@ -85,7 +88,7 @@
                                     @endphp
                                     @for ($j = $i; $j < $end; $j++)
                                         {{-- @if($imagesByCollection[$j]['users_id'] === $user_id) --}}
-                                        @if($imagesByCollection[$j]['users_id'] === '5')
+                                        @if($imagesByCollection[$j]['users_id'] === $user_id)
                                             <div class="card mx-2" style="height: 400px;">
                                                 <div class="img-hover-zoom">
                                                     <a href="{{ route('collection.show', [

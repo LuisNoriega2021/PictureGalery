@@ -12,29 +12,29 @@ use View;
 
 class CollectionsController extends Controller
 {
-    public function index()
-{
-    $collections = collections::where('state', 1)->get();
-    $imagesByCollection = [];
+//     public function index()
+// {
+//     $collections = collections::where('state', 1)->get();
+//     $imagesByCollection = [];
 
-    foreach ($collections as $collection) {
-        $image = Imagenes::where('collection_id', $collection->id)->first();
-        if ($image !== null) {
-            $imageData = [
-                'title' => $image->title,
-                'details' => $image->details,
-                'path' => $image->path,
-                'disks'=> $image->disks,
-                'collection_id'=> $image->collection_id,
-                'users_id'=> $collection->users_id,
-                'collection_title' => $collection->title,
-                'collection_details' => $collection->details,
-            ];
-            $imagesByCollection[] = $imageData;
-        }
-    }
-    return view('home', ['imagesByCollection' => $imagesByCollection]);
-}
+//     foreach ($collections as $collection) {
+//         $image = Imagenes::where('collection_id', $collection->id)->first();
+//         if ($image !== null) {
+//             $imageData = [
+//                 'title' => $image->title,
+//                 'details' => $image->details,
+//                 'path' => $image->path,
+//                 'disks'=> $image->disks,
+//                 'collection_id'=> $image->collection_id,
+//                 'users_id'=> $collection->users_id,
+//                 'collection_title' => $collection->title,
+//                 'collection_details' => $collection->details,
+//             ];
+//             $imagesByCollection[] = $imageData;
+//         }
+//     }
+//     return view('home', ['imagesByCollection' => $imagesByCollection]);
+// }
 
     public function create()
     {
@@ -83,11 +83,12 @@ class CollectionsController extends Controller
     }
 
 
-    public function getUserId()
-    {
-        $user_id = Auth::id();
-        return view('home', ['user_id' => $user_id]);
-    }
+    // public function getUserId()
+    // {
+    //     $user_id = Auth::id();
+    //     dd($user_id); // Esto es solo para verificar si el ID del usuario se está obteniendo correctamente
+    //     return view('home', ['user_id' => $user_id]);
+    // }
 
     public function edit(collections $collection)
     {
@@ -130,7 +131,7 @@ class CollectionsController extends Controller
 
         $log = new logs();
         $log->details = 'update ' . $collection['id'];
-        //$log->user_id = Auth::id();
+        $log->user_id = Auth::id();
         $log->user_id = $resultValidated['users_id'];
         $log->table_name = 'collections';
         $log->save();

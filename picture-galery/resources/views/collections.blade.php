@@ -184,34 +184,6 @@ $users_id = request()->query('users_id');
 
     <input type="file" id="fileInput" accept=".jpg, .jpeg, .png, .tif" style="display:none;">
 
-{{-- <script type="text/javascript">
-    document.addEventListener("DOMContentLoaded", function() {
-        function deleteCollection() {
-            const usersId = document.body.getAttribute("data-users-id");
-            const collectionId = {{ request('collection_id') }};
-            console.log("collectionId:", collectionId);
-            console.log("usersId:", usersId);
-            fetch("{{ route('collection.destroy', ['id' => 'id', 'users' => 'users']) }}"
-            .replace('id', collectionId)
-            .replace('users', usersId),
-            {
-                method: "DELETE",
-                headers: {
-                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                setTimeout(function() {
-                    window.location.href = "{{ route('home') }}";
-                }, 1000);
-            })
-            .catch(error => {
-                console.error("Error:", error);
-            });
-        }
-    });
-</script> --}}
      <script>
         document.addEventListener("DOMContentLoaded", function() {
             function deleteCollection() {
@@ -240,8 +212,6 @@ $users_id = request()->query('users_id');
             }
         });
     </script>
-
-
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const collectionData = @json($collection_id);
