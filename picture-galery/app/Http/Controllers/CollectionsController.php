@@ -14,12 +14,8 @@ class CollectionsController extends Controller
 {
     public function index()
 {
-
-}
-
-public function GetId()
-{
-
+    $user_id = Auth::id();
+    return view('collections', ['user_id' => $user_id]);
 }
 
     public function store(Request $request)
@@ -56,8 +52,14 @@ public function GetId()
 
     public function show($id)
     {
+        $user_id = Auth::id();
+
         $images = Imagenes::where('collection_id', $id)->get();
-        return view('collections', ['collection_id' => $images]);
+       // return view('collections', ['collection_id' => $images]);
+       return view('collections', [
+        'collection_id' => $images,
+        'user_id' => $user_id
+    ]);
     }
 
 

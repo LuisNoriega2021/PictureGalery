@@ -22,11 +22,11 @@ $users_id = request()->query('users_id');
 
     <title>Galería fotográfica</title>
 </head>
-<body data-users-id="{{ $uId   }}"  data-collection-id="{{ $collectionId }}">
+<body data-users-id="{{ $user_id   }}"  data-collection-id="{{ $collectionId }}">
     @extends('layouts.app')
     @section('content')
     <div class="header">
-        <h2>{{ $uId   }}</h2>
+        <h2>{{ $collectionTitle   }}</h2>
     </div>
     <div class="container main-content">
         <div class="row justify-content-center">
@@ -59,8 +59,8 @@ $users_id = request()->query('users_id');
         <div>
             <div class="col text-center">
                 <button class="btn button_style_glass mt-3" data-bs-toggle="modal" data-bs-target="#myModal"
-                    @if( $users_id === $uId)
-                        @if(request()->query('collection_title') !== 'Crea tu nueva Galería!')
+                    @if( intval($users_id) === intval($user_id))
+                        @if(request()->query('collection_title') === 'Crea tu nueva Galería!')
                         enabled
                         @else
                         disabled
@@ -118,15 +118,15 @@ $users_id = request()->query('users_id');
                     <p class="d-flex justify-content-between align-items-center">
                         <span>Eliminar la galería actual</span>
                         <button class="btn button_style_glass" data-bs-toggle="modal" data-bs-target="#deleteModal"
-                        @if(request()->query('users_id') === '5')
-                        @if(request()->query('collection_title') !== 'Crea tu nueva Galería!')
+                        @if( intval($users_id) === intval($user_id))
+                        @if(request()->query('collection_title') === 'Crea tu nueva Galería!')
                         enabled
                         @else
                         disabled
                         @endif
-                        @else
-                        disabled
-                        @endif>
+                    @else
+                    disabled
+                    @endif>
                         {{ __('Eliminar') }}
                     </button>
                     </p>
